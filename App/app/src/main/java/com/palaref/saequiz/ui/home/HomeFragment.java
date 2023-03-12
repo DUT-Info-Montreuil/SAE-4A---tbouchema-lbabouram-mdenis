@@ -9,7 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.palaref.saequiz.MainActivity;
+import com.palaref.saequiz.R;
 import com.palaref.saequiz.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -24,6 +27,9 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+
+
         return root;
     }
 

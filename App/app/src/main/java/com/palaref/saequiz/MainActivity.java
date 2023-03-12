@@ -10,10 +10,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -51,6 +51,37 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+        /*
+        navView.setOnItemSelectedListener(item -> {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                int animIdEnter, animIdExit;
+
+                // Get the position of the current and target destinations in the menu
+                int currentPosition = navView.getMenu().findItem(destination.getId()).getOrder();
+                int targetPosition = navView.getMenu().findItem(item.getItemId()).getOrder();
+
+                // Set the animation based on the relative position of the destinations
+                if (currentPosition < targetPosition) {
+                    animIdEnter = R.anim.slide_in_right;
+                    animIdExit = R.anim.slide_out_left;
+                } else {
+                    animIdEnter = R.anim.slide_in_left;
+                    animIdExit = R.anim.slide_out_right;
+                }
+
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setEnterAnim(animIdEnter)
+                        .setExitAnim(animIdExit)
+                        .setPopEnterAnim(animIdEnter)
+                        .setPopExitAnim(animIdExit)
+                        .build();
+
+                //controller.navigate(destination.getId(), arguments, navOptions);
+            });
+
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
+        */
     }
 
     // this hides is done to get a true full screen experience try commenting if you don't get what it does

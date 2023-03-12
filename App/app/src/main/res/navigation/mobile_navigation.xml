@@ -9,7 +9,18 @@
         android:id="@+id/navigation_home"
         android:name="com.palaref.saequiz.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_search2"
+            app:destination="@id/navigation_search"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_in_left" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_favorites2"
+            app:destination="@id/navigation_favorites"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_in_left" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_favorites"
