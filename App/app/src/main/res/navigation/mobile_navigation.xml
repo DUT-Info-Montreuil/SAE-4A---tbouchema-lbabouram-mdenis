@@ -28,4 +28,9 @@
         android:name="com.palaref.saequiz.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search"/>
+    <fragment
+        android:id="@+id/navigation_leaderboard"
+        android:name="com.palaref.saequiz.ui.leaderboard.LeaderboardFragment"
+        android:label="@string/title_leaderboard"
+        tools:layout="@layout/fragment_leaderboard"/>
 </navigation>
