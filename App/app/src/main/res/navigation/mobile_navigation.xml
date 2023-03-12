@@ -22,4 +22,10 @@
         android:name="com.palaref.saequiz.ui.notifications.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.palaref.saequiz.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search"/>
 </navigation>

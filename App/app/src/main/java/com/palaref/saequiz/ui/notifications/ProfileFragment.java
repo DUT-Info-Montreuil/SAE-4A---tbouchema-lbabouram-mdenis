@@ -15,9 +15,10 @@ import com.palaref.saequiz.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private ProfileViewModel notificationsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ProfileViewModel notificationsViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        notificationsViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
