@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class FavoritesViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> Text;
 
     public FavoritesViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        Text = new MutableLiveData<>();
+        Text.setValue("This is the Favorites fragment");
     }
 
     public LiveData<String> getText() {
-        return mText;
+        return Text;
     }
 }

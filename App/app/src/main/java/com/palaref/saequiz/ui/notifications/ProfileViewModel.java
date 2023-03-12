@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class ProfileViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> Text;
 
     public ProfileViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        Text = new MutableLiveData<>();
+        Text.setValue("This is the Profile fragment");
     }
 
     public LiveData<String> getText() {
-        return mText;
+        return Text;
     }
 }
