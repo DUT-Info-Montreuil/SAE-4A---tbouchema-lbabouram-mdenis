@@ -30,7 +30,7 @@ public class LeaderboardFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textLeaderboard;
-        leaderboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        leaderboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText); // basically binds the textView to the String in the ViewModel so that it is updated when the String is updated
 
         return root;
     }
