@@ -5,4 +5,5 @@
     <string name="title_profile">Profile</string>
     <string name="title_search">Search</string>
     <string name="title_leaderboard">Leaderboard</string>
+    <string name="monthly_quiz_illustration">Illustration for the monthly quiz.</string>
 </resources>
