@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.palaref.saequiz.databinding.FragmentHomeBinding;
+import com.palaref.saequiz.utils.RecycleItemSpacingDecorator;
 
 public class HomeFragment extends Fragment {
 
@@ -28,8 +29,7 @@ public class HomeFragment extends Fragment {
         QuizAdapter adapter = new QuizAdapter(getContext(), homeViewModel.getQuizzes().getValue());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //final TextView textView = binding.textHome;
-        //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 
