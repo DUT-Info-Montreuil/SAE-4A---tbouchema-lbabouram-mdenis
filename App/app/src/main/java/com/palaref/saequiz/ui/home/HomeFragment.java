@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         RecyclerView recyclerView = binding.recyclerView;
-        QuizAdapter adapter = new QuizAdapter(getContext(), homeViewModel.getQuizzes().getValue());
+        QuizAdapter adapter = new QuizAdapter(getContext(), homeViewModel.getMonthlyQuiz().getValue(), homeViewModel.getQuizzes().getValue());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

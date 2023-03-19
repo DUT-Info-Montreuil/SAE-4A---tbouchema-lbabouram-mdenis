@@ -1,8 +1,6 @@
 package com.palaref.saequiz.model;
 
-import java.util.ArrayList;
-
-public class Quiz { // this class is the same as what we have in the database
+public class QuizInfo { // this class is the same as what we have in the database
     private int id;
     private String name;
     private String description;
@@ -12,7 +10,7 @@ public class Quiz { // this class is the same as what we have in the database
     private int numberOfFavorites;
     private String[] tags;
 
-    public Quiz(int id, String name, String description, int creatorId, String creationDate, String lastUpdateDate, int numberOfFavorites, String[] tags) {
+    public QuizInfo(int id, String name, String description, int creatorId, String creationDate, String lastUpdateDate, int numberOfFavorites, String[] tags) {
         this.id = id;
         this.name = name;
         this.description = description;

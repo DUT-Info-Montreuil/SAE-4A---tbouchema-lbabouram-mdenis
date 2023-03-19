@@ -11,43 +11,65 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.palaref.saequiz.R;
-import com.palaref.saequiz.model.Quiz;
+import com.palaref.saequiz.model.QuizInfo;
 
 import java.util.ArrayList;
 
-public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder> {
-    Context context;
-    ArrayList<Quiz> quizList;
+public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private LayoutInflater inflater;
+    private ArrayList<QuizInfo> quizInfoList;
+
+    private static final int VIEW_TYPE_MONTHLY_QUIZ = 0;
+    private static final int VIEW_TYPE_QUIZ = 1;
 
 
-    public QuizAdapter(Context context, ArrayList<Quiz> quizList) {
+    public QuizAdapter(Context context, QuizInfo monthlyQuiz, ArrayList<QuizInfo> quizInfoList) {
         // This is where we initialize the adapter
-        this.context = context;
-        this.quizList = quizList;
-    }
+        this.inflater = LayoutInflater.from(context);
 
-
-    @NonNull
-    @Override
-    public QuizViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // This is where we inflate the view and return the view holder
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.quiz_button_view, parent, false);
-
-        return new QuizAdapter.QuizViewHolder(view);
+        // We add the monthly quiz to the list in the first position
+        this.quizInfoList = new ArrayList<>();
+        this.quizInfoList.add(monthlyQuiz);
+        this.quizInfoList.addAll(quizInfoList);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull QuizViewHolder holder, int position) {
-        // This is where we update the view holder with the data
-        holder.mainButton.setText(quizList.get(position).getName());
-        // bind the data to the view holder
+    public int getItemViewType(int position) {
+        if (position == 0) { // If the position is 0, we return the monthly button
+            return VIEW_TYPE_MONTHLY_QUIZ;
+        } else { // Otherwise, we return the normal button
+            return VIEW_TYPE_QUIZ;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_MONTHLY_QUIZ) {
+            View view = inflater.inflate(R.layout.monthly_quiz_button_view, parent, false);
+            return new MonthlyQuizViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.quiz_button_view, parent, false);
+            return new QuizViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof MonthlyQuizViewHolder) {
+            // Bind monthly button layout
+
+        } else {
+            QuizInfo quizInfo = quizInfoList.get(position);
+            QuizViewHolder quizViewHolder = (QuizViewHolder) holder;
+            quizViewHolder.mainButton.setText(quizInfo.getName());
+            // Bind button layout
+        }
     }
 
     @Override
     public int getItemCount() {
         // This is where we return the number of items in the list
-        return quizList.size();
+        return quizInfoList.size();
     }
 
     public static class QuizViewHolder extends RecyclerView.ViewHolder {
@@ -61,6 +83,11 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
             super(itemView);
             bottomBar = itemView.findViewById(R.id.bottom_bar);
             mainButton = itemView.findViewById(R.id.main_button);
+        }
+    }
+    private static class MonthlyQuizViewHolder extends RecyclerView.ViewHolder {
+        MonthlyQuizViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

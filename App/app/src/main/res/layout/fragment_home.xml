@@ -8,36 +8,6 @@
     tools:context=".ui.home.HomeFragment"
     android:orientation="vertical">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:layout_marginBottom="64dp">
-
-            <ImageView
-                android:id="@+id/monthly_quiz_illustration"
-                android:layout_width="350dp"
-                android:layout_height="140dp"
-                android:layout_marginBottom="-40dp"
-                android:contentDescription="@string/monthly_quiz_illustration"
-                android:src="@drawable/home_quiz_bar_shape"
-                app:layout_constraintBottom_toBottomOf="@+id/monthly_quiz_button"
-                app:layout_constraintEnd_toEndOf="@+id/monthly_quiz_button"
-                app:layout_constraintStart_toStartOf="@+id/monthly_quiz_button" />
-
-            <Button
-                android:id="@+id/monthly_quiz_button"
-                android:layout_width="350dp"
-                android:layout_height="150dp"
-                android:background="@drawable/home_monthlyquiz_shape"
-                android:text="@string/monthly_quiz_illustration"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
