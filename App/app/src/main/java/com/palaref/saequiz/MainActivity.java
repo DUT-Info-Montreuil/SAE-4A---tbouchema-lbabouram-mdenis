@@ -1,8 +1,10 @@
 package com.palaref.saequiz;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -19,6 +21,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.palaref.saequiz.databinding.ActivityMainBinding;
+import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.model.User;
+import com.palaref.saequiz.utils.SQLiteManager;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +46,34 @@ public class MainActivity extends AppCompatActivity {
         setupNav();
 
         setupTheme();
+
+        //SQLiteManager.getInstance(this).addUser(new User("testMan", "La congolexicomatisation des lois du marché propres aux congolais.", Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)));
+        //this.deleteDatabase("quizDB");
+
+        //get quiz with id 1 if it's not in the db add it
+
+
+
+        debugDatabse();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
+    }
+
+    private void debugDatabse() {
+        ArrayList<User> userList = SQLiteManager.getInstance(this).selectAllUsers();
+        ArrayList<QuizInfo> quizList = SQLiteManager.getInstance(this).selectAllQuizInfos();
+        Log.d("USER", "onCreate: " + userList.size() + " users loaded from DB" + userList.toString());
+        for(User user : userList){
+            Log.d("USER", "onCreate: " + user.toString());
+        }
+        Log.d("QUIZ", "onCreate: " + quizList.size() + " WYRs loaded from DB" + quizList.toString());
+        for(QuizInfo quizInfo : quizList){
+            Log.d("QUIZ", "onCreate: " + quizInfo.toString());
+        }
     }
 
     private void setupNav(){

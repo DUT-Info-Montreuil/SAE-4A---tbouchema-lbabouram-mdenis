@@ -1,6 +1,7 @@
 package com.palaref.saequiz.ui.home;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.model.User;
+import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.ArrayList;
 
@@ -42,8 +45,9 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MONTHLY_QUIZ) {
             View view = inflater.inflate(R.layout.monthly_quiz_button_view, parent, false);
             return new MonthlyQuizViewHolder(view);
@@ -57,12 +61,12 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MonthlyQuizViewHolder) {
             // Bind monthly button layout
-
+            MonthlyQuizViewHolder monthlyQuizViewHolder = (MonthlyQuizViewHolder) holder;
         } else {
             QuizInfo quizInfo = quizInfoList.get(position);
             QuizViewHolder quizViewHolder = (QuizViewHolder) holder;
             quizViewHolder.mainButton.setText(quizInfo.getName());
-            // Bind button layout
+            // Bind button layout and make buttons launch quiz activity when it is ready
         }
     }
 
@@ -86,8 +90,10 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
     private static class MonthlyQuizViewHolder extends RecyclerView.ViewHolder {
+        Button mainButton;
         MonthlyQuizViewHolder(View itemView) {
             super(itemView);
+            mainButton = itemView.findViewById(R.id.monthly_quiz_button);
         }
     }
 }
