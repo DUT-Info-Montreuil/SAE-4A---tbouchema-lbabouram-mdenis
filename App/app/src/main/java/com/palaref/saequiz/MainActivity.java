@@ -27,7 +27,7 @@ import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { // for some reason onCreate and onStart (and maybe others) are called twice, keep that in mind when coding. This goes for all activities.
 
     private ActivityMainBinding binding;
     public SharedPreferences sharedPreferences;
@@ -47,12 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupTheme();
 
-        //SQLiteManager.getInstance(this).addUser(new User("testMan", "La congolexicomatisation des lois du marché propres aux congolais.", Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)));
         //this.deleteDatabase("quizDB");
-
-        //get quiz with id 1 if it's not in the db add it
-
-
 
         debugDatabse();
     }
@@ -60,7 +55,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if(SQLiteManager.getInstance(this).selectAllUsers().size() == 0)
+            SQLiteManager.getInstance(this).addUser(new User("testMan", "La congolexicomatisation des lois du marché propres aux congolais.", Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)));
+        else
+            Log.d("User", "Database has one or more users : "+ SQLiteManager.getInstance(this).selectAllUsers().get(0).getUsername());
+
+        if(SQLiteManager.getInstance(this).selectAllQuizInfos().size() == 0){
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 2", "Description EPIC", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 3", "Description wow", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 4", "Description cool", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 5", "Description pas ouf", 1, SQLiteManager.getNowDate()));
+        }
+        else
+            Log.d("Quiz", "Database has one or more quizzes : " + SQLiteManager.getInstance(this).selectAllQuizInfos().toString());
+
+        /*
         SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 2", "Description EPIC", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 3", "Description wow", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 4", "Description cool", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 5", "Description pas ouf", 1, SQLiteManager.getNowDate()));
+
+         */
     }
 
     private void debugDatabse() {

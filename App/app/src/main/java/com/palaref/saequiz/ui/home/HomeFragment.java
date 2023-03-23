@@ -34,18 +34,28 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        /*
-        QuizInfo quiz = new QuizInfo("Quiz 5", "Description 5", 5, SQLiteManager.getNowDate());
-        SQLiteManager.getInstance(this.getContext()).addQuiz(quiz);
-
-         */
-
-        Objects.requireNonNull(homeViewModel.getQuizzes().getValue()).addAll(SQLiteManager.getInstance(this.getContext()).selectAllQuizInfos());
-
         setupAdapter();
 
         return root;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // this isn't really clean code but it works
+        homeViewModel.getQuizzes().getValue().clear();
+        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).selectAllQuizInfos());
+    }
+
+    private void debugList() {
+        for(QuizInfo quiz : SQLiteManager.getInstance(this.getContext()).selectAllQuizInfos()) {
+            Log.d("Quiz", quiz.getName());
+            for(QuizInfo quiz2 : Objects.requireNonNull(homeViewModel.getQuizzes().getValue())) {
+                Log.d("Quiz2", quiz2.getName());
+            }
+        }
+    }
+
 
     private void setupAdapter() {
         RecyclerView recyclerView = binding.recyclerView;
