@@ -27,7 +27,7 @@ public class User {
 
     public User(String username, Context context){
         this.username = username;
-        this.description = "This is my increadible description !";
+        this.description = "This is my incredible description !";
         this.profilePicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp1);
     }
 

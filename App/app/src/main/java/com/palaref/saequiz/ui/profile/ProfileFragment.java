@@ -3,9 +3,11 @@ package com.palaref.saequiz.ui.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,11 +18,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.databinding.FragmentProfileBinding;
+import com.palaref.saequiz.model.User;
+import com.palaref.saequiz.utils.SQLiteManager;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private ProfileViewModel notificationsViewModel;
+    private ProfileViewModel profileViewModel;
 
     private final ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult( // this is a variable even though it looks like a method
             new ActivityResultContracts.StartActivityForResult(),
@@ -35,18 +39,25 @@ public class ProfileFragment extends Fragment {
                     } else {
                         // Display error message or retry login
                         // ...
+                        profileViewModel.setText("Not logged in");
                     }
                 }
             });
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textProfile;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        final Button loginButton = binding.loginButtonProfileFragment;
+        loginButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            loginLauncher.launch(intent);
+        });
         return root;
     }
 
@@ -66,7 +77,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadUserData(int id){
-
+        Log.d("ProfileFragment", "loadUserData: " + id);
+        User user = SQLiteManager.getInstance(getContext()).getUserById(id);
+        if(user != null)
+            profileViewModel.setText("Logged in as " + user.getUsername());
+        else
+            profileViewModel.setText("User not found");
     }
 
     @Override

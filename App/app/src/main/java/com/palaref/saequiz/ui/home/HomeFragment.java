@@ -1,12 +1,10 @@
 package com.palaref.saequiz.ui.home;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,11 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.palaref.saequiz.databinding.FragmentHomeBinding;
 import com.palaref.saequiz.model.QuizInfo;
-import com.palaref.saequiz.model.User;
-import com.palaref.saequiz.utils.RecycleItemSpacingDecorator;
 import com.palaref.saequiz.utils.SQLiteManager;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
@@ -44,11 +39,11 @@ public class HomeFragment extends Fragment {
         super.onStart();
         // this isn't really clean code but it works
         homeViewModel.getQuizzes().getValue().clear();
-        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).selectAllQuizInfos());
+        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
     }
 
     private void debugList() {
-        for(QuizInfo quiz : SQLiteManager.getInstance(this.getContext()).selectAllQuizInfos()) {
+        for(QuizInfo quiz : SQLiteManager.getInstance(this.getContext()).getAllQuizInfos()) {
             Log.d("Quiz", quiz.getName());
             for(QuizInfo quiz2 : Objects.requireNonNull(homeViewModel.getQuizzes().getValue())) {
                 Log.d("Quiz2", quiz2.getName());

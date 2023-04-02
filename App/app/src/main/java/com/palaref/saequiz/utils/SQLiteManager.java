@@ -96,18 +96,19 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     public User getUserByUsername(String username) {
         SQLiteDatabase db = getReadableDatabase();
         try (Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_USERNAME + "=?", new String[]{username})) {
-            if (result.getCount() != 0) {
-                result.moveToFirst();
+            if (result.moveToFirst()) {
                 @SuppressLint("Range") int id = result.getInt(result.getColumnIndex(USERS_ID));
                 @SuppressLint("Range") String description = result.getString(result.getColumnIndex(USERS_DESCRIPTION));
                 @SuppressLint("Range") Bitmap profilePicture = getBitmapFromByteArray(result.getBlob(result.getColumnIndex(USERS_PICTURE)));
                 return new User(id, username, description, profilePicture);
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }
 
-    public ArrayList<User> selectAllUsers(){
+    public ArrayList<User> getAllUsers(){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<User> users = new ArrayList<>();
         try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE, null)){
@@ -124,17 +125,18 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         return users;
     }
 
-    public User selectUserById(int id){
+    public User getUserById(int id){
         SQLiteDatabase db = getReadableDatabase();
         User user = null;
         try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_ID + " = " + id, null)){
             if(result.moveToFirst()){
-                result.moveToNext();
                 String username = result.getString(1);
                 String description = result.getString(2);
                 Bitmap profilePicture = getBitmapFromByteArray(result.getBlob(3));
                 user = new User(id, username, description, profilePicture);
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return user;
     }
@@ -151,7 +153,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         db.insert(QUIZINFO_TABLE, null, values);
     }
 
-    public ArrayList<QuizInfo> selectAllQuizInfos(){
+    public ArrayList<QuizInfo> getAllQuizInfos(){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<QuizInfo> quizzes = new ArrayList<>();
         try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE, null)){
@@ -169,12 +171,11 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         return quizzes;
     }
 
-    public QuizInfo selectQuizInfoById(int id){
+    public QuizInfo getQuizInfoById(int id){
         SQLiteDatabase db = getReadableDatabase();
         QuizInfo quiz = null;
         try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + ID_FIELD + " = " + id, null)){
             if(result.moveToFirst()){
-                result.moveToNext();
                 String name = result.getString(1);
                 String description = result.getString(2);
                 int creatorId = result.getInt(3);

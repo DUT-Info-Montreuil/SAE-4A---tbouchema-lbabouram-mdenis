@@ -1,5 +1,6 @@
 package com.palaref.saequiz.ui.profile;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,20 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userEditText; // can either be email or username
     private EditText passwordEditText;
 
+    private final ActivityResultLauncher<Intent> signupLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            Intent data = result.getData();
+            assert data != null;
+            String username = data.getStringExtra("username");
+            String password = data.getStringExtra("password");
+            String email = data.getStringExtra("email");
+            User user = new User(username, this);
+            SQLiteManager.getInstance(this).addUser(user);
+            MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, SQLiteManager.getInstance(this).getUserByUsername(username).getId()).apply();
+            finish();
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +51,10 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> login());
         signUpButton.setOnClickListener(v -> signUp());
         userEditText.addTextChangedListener(new TextWatcher() {
-
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -53,16 +62,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         passwordEditText.addTextChangedListener(new TextWatcher() {
-
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -101,19 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         // TODO: implement sign up by opening a new activity with a form and a button to submit which will call the API to create a new user and then log in
         // since API is not implemented yet only use shared preferences
         Intent intent = new Intent(this, SignupActivity.class);
-        //startActivityForResult(intent, 69);
         // for now some data will be left behind in the form
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if(result.getResultCode() == RESULT_OK) {
-                Intent data = result.getData();
-                String username = data.getStringExtra("username");
-                String password = data.getStringExtra("password");
-                String email = data.getStringExtra("email");
-                User user = new User(username, this);
-                SQLiteManager.getInstance(this).addUser(user);
-                MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, user.getId()).apply();
-                finish();
-            }
-        });
+        signupLauncher.launch(intent);
     }
 }

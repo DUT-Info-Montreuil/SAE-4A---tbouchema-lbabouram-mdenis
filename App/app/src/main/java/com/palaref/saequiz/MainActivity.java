@@ -12,9 +12,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -57,12 +54,12 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
     @Override
     protected void onStart() {
         super.onStart();
-        if(SQLiteManager.getInstance(this).selectAllUsers().size() == 0)
+        if(SQLiteManager.getInstance(this).getAllUsers().size() == 0)
             SQLiteManager.getInstance(this).addUser(new User("testMan", "La congolexicomatisation des lois du marché propres aux congolais.", Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)));
         else
-            Log.d("User", "Database has one or more users : "+ SQLiteManager.getInstance(this).selectAllUsers().get(0).getUsername());
+            Log.d("User", "Database has one or more users : "+ SQLiteManager.getInstance(this).getAllUsers().get(0).getUsername());
 
-        if(SQLiteManager.getInstance(this).selectAllQuizInfos().size() == 0){
+        if(SQLiteManager.getInstance(this).getAllQuizInfos().size() == 0){
             SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
             SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 2", "Description EPIC", 1, SQLiteManager.getNowDate()));
             SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 3", "Description wow", 1, SQLiteManager.getNowDate()));
@@ -70,7 +67,7 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
             SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 5", "Description pas ouf", 1, SQLiteManager.getNowDate()));
         }
         else
-            Log.d("Quiz", "Database has one or more quizzes : " + SQLiteManager.getInstance(this).selectAllQuizInfos().toString());
+            Log.d("Quiz", "Database has one or more quizzes : " + SQLiteManager.getInstance(this).getAllQuizInfos().toString());
 
         /*
         SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
@@ -83,8 +80,8 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
     }
 
     private void debugDatabse() {
-        ArrayList<User> userList = SQLiteManager.getInstance(this).selectAllUsers();
-        ArrayList<QuizInfo> quizList = SQLiteManager.getInstance(this).selectAllQuizInfos();
+        ArrayList<User> userList = SQLiteManager.getInstance(this).getAllUsers();
+        ArrayList<QuizInfo> quizList = SQLiteManager.getInstance(this).getAllQuizInfos();
         Log.d("USER", "onCreate: " + userList.size() + " users loaded from DB" + userList.toString());
         for(User user : userList){
             Log.d("USER", "onCreate: " + user.toString());
