@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_favorites"
-        android:name="com.palaref.saequiz.ui.dashboard.FavoritesFragment"
+        android:name="com.palaref.saequiz.ui.favorites.FavoritesFragment"
         android:label="@string/title_favorites"
         tools:layout="@layout/fragment_favorites" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.palaref.saequiz.ui.notifications.ProfileFragment"
+        android:name="com.palaref.saequiz.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 

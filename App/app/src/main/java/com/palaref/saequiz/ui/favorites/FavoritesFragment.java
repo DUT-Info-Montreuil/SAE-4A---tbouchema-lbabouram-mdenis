@@ -1,4 +1,4 @@
-package com.palaref.saequiz.ui.dashboard;
+package com.palaref.saequiz.ui.favorites;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

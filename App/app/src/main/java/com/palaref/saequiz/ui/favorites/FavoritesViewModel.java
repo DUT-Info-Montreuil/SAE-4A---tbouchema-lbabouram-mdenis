@@ -1,4 +1,4 @@
-package com.palaref.saequiz.ui.dashboard;
+package com.palaref.saequiz.ui.favorites;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

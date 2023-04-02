@@ -1,4 +1,4 @@
-package com.palaref.saequiz.ui.notifications;
+package com.palaref.saequiz.ui.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
