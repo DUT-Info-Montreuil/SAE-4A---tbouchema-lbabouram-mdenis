@@ -9,22 +9,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.palaref.saequiz.MainActivity;
+import com.palaref.saequiz.R;
 import com.palaref.saequiz.databinding.FragmentProfileBinding;
 import com.palaref.saequiz.model.User;
 import com.palaref.saequiz.utils.SQLiteManager;
+
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private ProfileViewModel profileViewModel;
+    private boolean hasPopped = false;
+    private Button loginButton;
+    private Button logoutButton;
 
     private final ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult( // this is a variable even though it looks like a method
             new ActivityResultContracts.StartActivityForResult(),
@@ -34,13 +43,12 @@ public class ProfileFragment extends Fragment {
                     int id = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
                     if (id != -1) {
                         // Load user data and update UI
-                        // ...
                         loadUserData(id);
                     } else {
                         // Display error message or retry login
-                        // ...
                         profileViewModel.setText("Not logged in");
                     }
+                } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                 }
             });
 
@@ -53,11 +61,21 @@ public class ProfileFragment extends Fragment {
         final TextView textView = binding.textProfile;
         profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        final Button loginButton = binding.loginButtonProfileFragment;
+        loginButton = binding.loginButtonProfileFragment;
         loginButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             loginLauncher.launch(intent);
         });
+
+
+        logoutButton = binding.logoutButton;
+        logoutButton.setOnClickListener(v -> {
+            MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, -1).apply();
+            profileViewModel.setText("Not logged in");
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            navController.navigate(R.id.navigation_home);
+        });
+
         return root;
     }
 
@@ -65,9 +83,15 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) != -1)
+            loginButton.setVisibility(View.GONE);
+        if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) == -1)
+            logoutButton.setVisibility(View.GONE);
+
         int id = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
-        if(id == -1){
+        if(id == -1 && !hasPopped){
             // not logged in
+            hasPopped = true;
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             loginLauncher.launch(intent);
         }else {
@@ -81,6 +105,8 @@ public class ProfileFragment extends Fragment {
         User user = SQLiteManager.getInstance(getContext()).getUserById(id);
         if(user != null)
             profileViewModel.setText("Logged in as " + user.getUsername());
+        else if (id == -1)
+            profileViewModel.setText("Not logged in");
         else
             profileViewModel.setText("User not found");
     }

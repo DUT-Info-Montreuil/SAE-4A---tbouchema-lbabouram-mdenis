@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
 
     private ActivityMainBinding binding;
     public static SharedPreferences sharedPreferences;
+    NavController navController;
     public static final String USER_ID = "user_id";
 
     @Override
