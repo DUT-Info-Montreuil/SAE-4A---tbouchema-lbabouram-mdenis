@@ -93,7 +93,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         db.insert(USERS_TABLE, null, values);
     }
 
-    private User getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         SQLiteDatabase db = getReadableDatabase();
         try (Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_USERNAME + "=?", new String[]{username})) {
             if (result.getCount() != 0) {

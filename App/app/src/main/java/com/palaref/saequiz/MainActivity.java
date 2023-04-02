@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity { // for some reason onCreate and onStart (and maybe others) are called twice, keep that in mind when coding. This goes for all activities.
 
     private ActivityMainBinding binding;
-    public SharedPreferences sharedPreferences;
+    public static SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences("com.palaref.saequiz", MODE_PRIVATE);
+        if(sharedPreferences == null)
+            sharedPreferences = getSharedPreferences("com.palaref.saequiz", MODE_PRIVATE);
 
         hideSystemUI();
         setupNav();
