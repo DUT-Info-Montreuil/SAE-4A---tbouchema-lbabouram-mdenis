@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
 
     private ActivityMainBinding binding;
     public static SharedPreferences sharedPreferences;
+    public static final String USER_ID = "user_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

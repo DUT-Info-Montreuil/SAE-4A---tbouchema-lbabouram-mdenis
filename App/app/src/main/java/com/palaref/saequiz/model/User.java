@@ -1,6 +1,10 @@
 package com.palaref.saequiz.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.palaref.saequiz.R;
 
 public class User {
     private int id;
@@ -19,6 +23,12 @@ public class User {
         this.username = username;
         this.description = description;
         this.profilePicture = profilePicture;
+    }
+
+    public User(String username, Context context){
+        this.username = username;
+        this.description = "This is my increadible description !";
+        this.profilePicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp1);
     }
 
     public int getId() {

@@ -1,7 +1,9 @@
 package com.palaref.saequiz.ui.profile;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -88,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         // for now just gonna check if user is in local database and not care about password
         User userObject = SQLiteManager.getInstance(this).getUserByUsername(user);
         if(userObject != null) {
-            MainActivity.sharedPreferences.edit().putInt("user_id", userObject.getId()).apply();
+            MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, userObject.getId()).apply();
             finish();
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -98,5 +100,20 @@ public class LoginActivity extends AppCompatActivity {
     private void signUp() {
         // TODO: implement sign up by opening a new activity with a form and a button to submit which will call the API to create a new user and then log in
         // since API is not implemented yet only use shared preferences
+        Intent intent = new Intent(this, SignupActivity.class);
+        //startActivityForResult(intent, 69);
+        // for now some data will be left behind in the form
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if(result.getResultCode() == RESULT_OK) {
+                Intent data = result.getData();
+                String username = data.getStringExtra("username");
+                String password = data.getStringExtra("password");
+                String email = data.getStringExtra("email");
+                User user = new User(username, this);
+                SQLiteManager.getInstance(this).addUser(user);
+                MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, user.getId()).apply();
+                finish();
+            }
+        });
     }
 }
