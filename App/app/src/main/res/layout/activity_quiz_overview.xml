@@ -8,13 +8,15 @@
 
     <Button
         android:id="@+id/play_button_overview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="134dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="32dp"
         android:text="Start"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="24dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/quiz_title_textview_overview"
@@ -22,6 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="Quiz title"
+        android:textStyle="bold"
+        android:textSize="32sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +33,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
+        android:layout_width="342dp"
         android:layout_height="50dp"
         android:layout_marginTop="-32dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,8 +44,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="297dp"
-        android:layout_height="128dp"
+        android:layout_width="342dp"
+        android:layout_height="208dp"
         android:layout_marginTop="26dp"
         android:alpha="0.5"
         app:layout_constraintEnd_toEndOf="parent"
