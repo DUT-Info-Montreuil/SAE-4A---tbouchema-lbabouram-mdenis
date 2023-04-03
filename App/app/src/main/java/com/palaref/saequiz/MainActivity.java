@@ -1,8 +1,10 @@
 package com.palaref.saequiz;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -10,20 +12,24 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.palaref.saequiz.databinding.ActivityMainBinding;
+import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.model.User;
+import com.palaref.saequiz.utils.SQLiteManager;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity { // for some reason onCreate and onStart (and maybe others) are called twice, keep that in mind when coding. This goes for all activities.
 
     private ActivityMainBinding binding;
-    public SharedPreferences sharedPreferences;
+    public static SharedPreferences sharedPreferences;
+    NavController navController;
+    public static final String USER_ID = "user_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +39,58 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences("com.palaref.saequiz", MODE_PRIVATE);
+        if(sharedPreferences == null)
+            sharedPreferences = getSharedPreferences("com.palaref.saequiz", MODE_PRIVATE);
 
         hideSystemUI();
         setupNav();
 
         setupTheme();
+
+        //this.deleteDatabase("quizDB");
+
+        debugDatabse();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(SQLiteManager.getInstance(this).getAllUsers().size() == 0)
+            SQLiteManager.getInstance(this).addUser(new User("testMan", "La congolexicomatisation des lois du marché propres aux congolais.", Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)));
+        else
+            Log.d("User", "Database has one or more users : "+ SQLiteManager.getInstance(this).getAllUsers().get(0).getUsername());
+
+        if(SQLiteManager.getInstance(this).getAllQuizInfos().size() == 0){
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 2", "Description EPIC", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 3", "Description wow", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 4", "Description cool", 1, SQLiteManager.getNowDate()));
+            SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 5", "Description pas ouf", 1, SQLiteManager.getNowDate()));
+        }
+        else
+            Log.d("Quiz", "Database has one or more quizzes : " + SQLiteManager.getInstance(this).getAllQuizInfos().toString());
+
+        /*
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz", "Description incroyable", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 2", "Description EPIC", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 3", "Description wow", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 4", "Description cool", 1, SQLiteManager.getNowDate()));
+        SQLiteManager.getInstance(this).addQuiz(new QuizInfo("test quiz 5", "Description pas ouf", 1, SQLiteManager.getNowDate()));
+
+         */
+    }
+
+    private void debugDatabse() {
+        ArrayList<User> userList = SQLiteManager.getInstance(this).getAllUsers();
+        ArrayList<QuizInfo> quizList = SQLiteManager.getInstance(this).getAllQuizInfos();
+        Log.d("USER", "onCreate: " + userList.size() + " users loaded from DB" + userList.toString());
+        for(User user : userList){
+            Log.d("USER", "onCreate: " + user.toString());
+        }
+        Log.d("QUIZ", "onCreate: " + quizList.size() + " WYRs loaded from DB" + quizList.toString());
+        for(QuizInfo quizInfo : quizList){
+            Log.d("QUIZ", "onCreate: " + quizInfo.toString());
+        }
     }
 
     private void setupNav(){

@@ -5,4 +5,9 @@
     <string name="title_profile">Profile</string>
     <string name="title_search">Search</string>
     <string name="title_leaderboard">Leaderboard</string>
+    <string name="monthly_quiz_illustration">Illustration for the monthly quiz.</string>
+    <string name="login_username_email">Username/Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_please_log_in_to_continue">Please log in to continue</string>
+    <string name="login_sign_up">Sign up</string>
 </resources>
