@@ -22,66 +22,39 @@ namespace QuizAPI.Services
         {
             string salt = BCrypt.Net.BCrypt.GenerateSalt();
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
-            
+
             await _userCollection.InsertOneAsync(user);
             return;
         }
 
         public async Task UpdateUserScoreAsync(string id, int score)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Score", score));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Score", score));
 
         public async Task UpdateAddUserScoreAsync(string id, int score)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Inc("Score", score));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Inc("Score", score));
 
         public async Task UpdateSubtractUserScoreAsync(string id, int score)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Inc("Score", -score));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Inc("Score", -score));
 
         public async Task UpdateAddUserFavQuizAsync(string id, string favQuiz)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("FavQuizzes", favQuiz));
-            return;
-        }
-
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("FavQuizzes", favQuiz));
         public async Task UpdateRemoveUserFavQuizAsync(string id, string favQuiz)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Pull("FavQuizzes", favQuiz));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Pull("FavQuizzes", favQuiz));
 
         public async Task UpdateUserProfilePictureAsync(string id, string profilePicture)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("ProfilePicture", profilePicture));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("ProfilePicture", profilePicture));
 
         public async Task UpdateUserCreatedQuizzesAsync(string id, string createdQuiz)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("CreatedQuizzes", createdQuiz));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("CreatedQuizzes", createdQuiz));
 
         public async Task UpdateUserPlayedQuizzesAsync(string id, string playedQuiz)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("PlayedQuizzes", playedQuiz));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.AddToSet("PlayedQuizzes", playedQuiz));
 
         public async Task UpdateUserPseudoAsync(string id, string pseudo)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Pseudo", pseudo));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Pseudo", pseudo));
 
-        public async Task UpdateUserPasswordAsync(string id, string password) {
+        public async Task UpdateUserPasswordAsync(string id, string password)
+        {
             string salt = BCrypt.Net.BCrypt.GenerateSalt();
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
             await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Password", hashedPassword));
@@ -89,30 +62,18 @@ namespace QuizAPI.Services
         }
 
         public async Task UpdateUserEmailAsync(string id, string email)
-        {
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Email", email));
-            return;
-        }
+            => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Email", email));
 
         public async Task<List<UserProfile>> GetAllUsersAsync()
-        {
-            return await _userCollection.Find(new BsonDocument()).ToListAsync();
-        }
+            => await _userCollection.Find(new BsonDocument()).ToListAsync();
 
         public async Task<UserProfile> GetUserByIdAsync(string id)
-        {
-            return await _userCollection.Find(user => user.Id == id).FirstOrDefaultAsync();
-        }
+            => await _userCollection.Find(user => user.Id == id).FirstOrDefaultAsync();
 
-        public async Task<UserProfile> GetUserByPseudoAsync(string pseudo)
-        {
-            return await _userCollection.Find(user => user.Pseudo == pseudo).FirstOrDefaultAsync();
-        }
+        public async Task<UserProfile> GetUserByLoginAsync(string login)
+            => await _userCollection.Find(user => user.Pseudo == login || user.Email == login).FirstOrDefaultAsync();
 
         public async Task DeleteUserAsync(string id)
-        {
-            await _userCollection.DeleteOneAsync(user => user.Id == id);
-            return;
-        }
+            => await _userCollection.DeleteOneAsync(user => user.Id == id);
     }
 }

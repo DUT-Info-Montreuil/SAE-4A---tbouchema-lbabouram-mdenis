@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sVE99RGeNnZBvmrG0c6rL8Rz7pBNCm84xGdPdFtYxbonzgO+MYIBcuAZzzrcnjw81GrDLb7eKPItzCD0i5HW8g==",
+  "dgSpecHash": "5fjgG520xGOK9J5wJAwmAzU4Wm1QeU0dHxrPBH2uNtCWkPnfUBwDd56VUrsVPMrskJuy86n23DyD1cADyTmBaA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj",
+  "projectFilePath": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zarka\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\zarka\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",

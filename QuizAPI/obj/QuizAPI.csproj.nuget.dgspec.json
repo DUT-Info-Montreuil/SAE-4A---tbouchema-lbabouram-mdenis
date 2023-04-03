@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj": {}
+    "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj": {
+    "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj",
+        "projectUniqueName": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj",
         "projectName": "QuizAPI",
-        "projectPath": "C:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj",
+        "projectPath": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj",
         "packagesPath": "C:\\Users\\zarka\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\zarka\\Desktop\\QuizAPI\\obj\\",
+        "outputPath": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\zarka\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1376,11 +1376,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj",
+      "projectUniqueName": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj",
       "projectName": "QuizAPI",
-      "projectPath": "c:\\Users\\zarka\\Desktop\\QuizAPI\\QuizAPI.csproj",
+      "projectPath": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\QuizAPI.csproj",
       "packagesPath": "C:\\Users\\zarka\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\zarka\\Desktop\\QuizAPI\\obj\\",
+      "outputPath": "C:\\Users\\zarka\\Desktop\\QuizSAE\\SAE-4A---tbouchema-lbabouram-mdenis\\QuizAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\zarka\\AppData\\Roaming\\NuGet\\NuGet.Config"

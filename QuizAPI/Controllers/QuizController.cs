@@ -10,54 +10,76 @@ namespace QuizAPI.Controllers
     public class QuizController : Controller
     {
         private readonly MongoDBQuizService _mongoDBQuizService;
-        
-        public QuizController(MongoDBQuizService mongoDBQuizService)
+        private readonly MongoDBAuthService _mongoDBAuthService;
+
+        public QuizController(MongoDBQuizService mongoDBQuizService, MongoDBAuthService mongoDBAuthService)
         {
             _mongoDBQuizService = mongoDBQuizService;
+            _mongoDBAuthService = mongoDBAuthService;
         }
 
         [HttpGet]
-        public async Task<List<QuizInfo>> GetAll() {
+        public async Task<List<QuizInfo>> GetAll()
+        {
             return await _mongoDBQuizService.GetAsync();
         }
 
-        [HttpGet("{id}")]
-        public async Task<QuizInfo> GetQuizInfo(string id) {
-            return await _mongoDBQuizService.GetQuizInfoAsync(id);
+        [HttpGet("byid/{elementid}")]
+        public async Task<QuizInfo> GetQuizInfo([FromRoute] string elementId)
+        {
+            return await _mongoDBQuizService.GetQuizInfoAsync(elementId);
         }
 
-        [HttpGet("questionnary/{id}")]
-        public async Task<QuizQuestionnary> GetQuizQuestionnary(string id) {
-            return await _mongoDBQuizService.GetQuizQuestionnaryAsync(id);
+        [HttpGet("questionnary/{elementid}")]
+        public async Task<QuizQuestionnary> GetQuizQuestionnary([FromRoute] string elementId)
+        {
+            return await _mongoDBQuizService.GetQuizQuestionnaryAsync(elementId);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostQuiz([FromBody] QuizInfo quizInfo) {
+        public async Task<IActionResult> PostQuiz([FromBody] QuizInfo quizInfo)
+        {
             await _mongoDBQuizService.CreateQuizAsync(quizInfo);
             return CreatedAtAction(nameof(GetAll), new { id = quizInfo.Id }, quizInfo); // Information about the created resource
         }
 
-        [HttpPut("name/{id}")]
-        public async Task<IActionResult> PutQuizName(string id, string quizName) {
-            await _mongoDBQuizService.UpdateQuizNameAsync(id, quizName);
+        [HttpPut("name")]
+        public async Task<IActionResult> PutQuizName(string userid, string elementId, string quizName)
+        {
+            if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
+                return Unauthorized();
+
+            await _mongoDBQuizService.UpdateQuizNameAsync(elementId, quizName);
             return NoContent();
         }
 
-        [HttpPut("description/{id}")]
-        public async Task<IActionResult> PutQuizDescription(string id, string quizDescription) {
-            await _mongoDBQuizService.UpdateQuizDescriptionAsync(id, quizDescription);
+        [HttpPut("description")]
+        public async Task<IActionResult> PutQuizDescription(string userid, string elementId, string quizDescription)
+        {
+            if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
+                return Unauthorized();
+
+            await _mongoDBQuizService.UpdateQuizDescriptionAsync(elementId, quizDescription);
             return NoContent();
         }
 
-        [HttpPatch("questionnary/{id}")]
-        public async Task<IActionResult> PatchQuizQuestionnary(string id, [FromBody] QuizQuestionnary quizQuestionnary) {
-            await _mongoDBQuizService.UpdateQuizQuestionnaryAsync(id, quizQuestionnary);
+        [HttpPut("questionnary")]
+        public async Task<IActionResult> PatchQuizQuestionnary(string userid, string elementId, [FromBody] QuizQuestionnary quizQuestionnary)
+        {
+            if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
+                return Unauthorized();
+
+            await _mongoDBQuizService.UpdateQuizQuestionnaryAsync(elementId, quizQuestionnary);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id) {
-            await _mongoDBQuizService.DeleteAsync(id);
+        [HttpDelete("byelementid")]
+        public async Task<IActionResult> Delete(string userid, string elementId)
+        {
+            if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
+                return Unauthorized();
+
+            await _mongoDBQuizService.DeleteAsync(elementId);
             return NoContent();
         }
     }

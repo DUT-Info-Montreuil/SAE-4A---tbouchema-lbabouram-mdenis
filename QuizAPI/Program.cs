@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 builder.Services.AddSingleton<MongoDBQuizService>();
 builder.Services.AddSingleton<MongoDBUserService>();
+builder.Services.AddSingleton<MongoDBAuthService>();
 
 // Add services to the container.
 

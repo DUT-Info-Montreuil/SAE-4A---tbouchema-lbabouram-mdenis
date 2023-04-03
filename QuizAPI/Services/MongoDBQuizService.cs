@@ -25,42 +25,24 @@ namespace QuizAPI.Services
         }
 
         public async Task UpdateQuizNameAsync(string id, string name)
-        {
-            await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizName", name));
-            return;
-        }
+            => await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizName", name));
 
         public async Task UpdateQuizDescriptionAsync(string id, string description)
-        {
-            await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizDescription", description));
-            return;
-        }
+            => await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizDescription", description));
 
         public async Task UpdateQuizQuestionnaryAsync(string id, QuizQuestionnary questionnary)
-        {
-            await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizQuestionnary", questionnary));
-            return;
-        }
+            => await _quizCollection.UpdateOneAsync(quiz => quiz.Id == id, Builders<QuizInfo>.Update.Set("QuizQuestionnary", questionnary));
 
         public async Task<List<QuizInfo>> GetAsync()
-        {
-            return await _quizCollection.Find(new BsonDocument()).ToListAsync();
-        }
+            => await _quizCollection.Find(new BsonDocument()).ToListAsync();
 
         public async Task<QuizInfo> GetQuizInfoAsync(string id)
-        {
-            return await _quizCollection.Find(quiz => quiz.Id == id).FirstOrDefaultAsync();
-        }
+            => await _quizCollection.Find(quiz => quiz.Id == id).FirstOrDefaultAsync();
 
         public async Task<QuizQuestionnary> GetQuizQuestionnaryAsync(string id)
-        {
-            return await _quizCollection.Find(quiz => quiz.Id == id).Project(quiz => quiz.QuizQuestionnary).FirstOrDefaultAsync();
-        }
+            => await _quizCollection.Find(quiz => quiz.Id == id).Project(quiz => quiz.QuizQuestionnary).FirstOrDefaultAsync();
 
         public async Task DeleteAsync(string id)
-        {
-            await _quizCollection.DeleteOneAsync(quiz => quiz.Id == id);
-            return;
-        }
+            => await _quizCollection.DeleteOneAsync(quiz => quiz.Id == id);
     }
 }

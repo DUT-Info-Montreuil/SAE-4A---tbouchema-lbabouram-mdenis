@@ -18,5 +18,6 @@ namespace QuizAPI.Models
         public List<string> CreatedQuiz { get; set; } = null!;
         public List<string> PlayedQuiz { get; set; } = null!;
         public int Score { get; set; } = 0;
+        public bool IsAdmin { get; set; } = false;
     }
 }
