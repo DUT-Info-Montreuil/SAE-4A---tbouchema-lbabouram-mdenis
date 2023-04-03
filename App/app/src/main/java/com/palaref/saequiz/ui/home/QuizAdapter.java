@@ -1,6 +1,7 @@
 package com.palaref.saequiz.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.palaref.saequiz.QuizOverviewActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
 import com.palaref.saequiz.model.User;
@@ -67,6 +69,15 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             QuizViewHolder quizViewHolder = (QuizViewHolder) holder;
             quizViewHolder.mainButton.setText(quizInfo.getName());
             // Bind button layout and make buttons launch quiz activity when it is ready
+            quizViewHolder.mainButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // start QuizOverviewActivity
+                    Intent intent = new Intent(inflater.getContext(), QuizOverviewActivity.class);
+                    intent.putExtra("quizId", quizInfo.getId());
+                    inflater.getContext().startActivity(intent);
+                }
+            });
         }
     }
 

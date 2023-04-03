@@ -7,10 +7,10 @@
     tools:context=".QuizOverviewActivity">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/play_button_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/description_textview_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
@@ -83,14 +83,23 @@
         app:srcCompat="@drawable/overview_bar_shape" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/bestscore_textview_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Best score"
+        android:text="Best score : xxx"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/creator_textview_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="By : Creator"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
