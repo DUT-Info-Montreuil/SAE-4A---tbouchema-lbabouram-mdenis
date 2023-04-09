@@ -163,8 +163,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                     String name = result.getString(1);
                     String description = result.getString(2);
                     int creatorId = result.getInt(3);
-                    Date creationDate = convertStringToDate(result.getString(4));
-                    quizzes.add(new QuizInfo(id, name, description, creatorId, creationDate));
+                    //Date creationDate = convertStringToDate(result.getString(4));
+                    quizzes.add(new QuizInfo(id, name, description, creatorId, result.getString(4), null)); //TODO: add QuizGame
                 }
             }
         }
@@ -179,8 +179,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 String name = result.getString(1);
                 String description = result.getString(2);
                 int creatorId = result.getInt(3);
-                Date creationDate = convertStringToDate(result.getString(4));
-                quiz = new QuizInfo(id, name, description, creatorId, creationDate);
+                //Date creationDate = convertStringToDate(result.getString(4));
+                quiz = new QuizInfo(id, name, description, creatorId, result.getString(4), null); //TODO: add QuizGame
             }
         }
         return quiz;

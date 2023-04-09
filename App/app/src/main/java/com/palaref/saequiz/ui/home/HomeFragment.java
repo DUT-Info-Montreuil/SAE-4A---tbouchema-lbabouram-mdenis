@@ -18,6 +18,9 @@ import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.Objects;
 
+import quiz.api.integration.QuizRequests;
+import quiz.api.integration.UserRequests;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -29,6 +32,9 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
+
         setupAdapter();
 
         return root;
@@ -38,6 +44,7 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // this isn't really clean code but it works
+
         homeViewModel.getQuizzes().getValue().clear();
         homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
     }

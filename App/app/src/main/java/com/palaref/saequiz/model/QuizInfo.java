@@ -1,18 +1,19 @@
 package com.palaref.saequiz.model;
 
-import java.sql.Date;
 import java.util.Arrays;
+import quiz.api.dto.QuizGame;
 
 public class QuizInfo { // this class is the same as what we have in the database
     private int id;
     private String name;
     private String description;
     private int creatorId;
-    private Date creationDate;
+    private String creationDate;
     private int numberOfFavorites; // will be obtained from the database by counting the number of rows in the favorites table that have this quiz id
     private String[] tags; // will be obtained from the database by selecting all the tags that have this quiz id
+    private QuizGame quizGame;
 
-    public QuizInfo(int id, String name, String description, int creatorId, Date creationDate) { // this constructor should only be used when we get the data from the database because the id is already set
+    public QuizInfo(int id, String name, String description, int creatorId, String creationDate, QuizGame quizGame) { // this constructor should only be used when we get the data from the database because the id is already set
         this.id = id;
         this.name = name;
         this.description = description;
@@ -20,15 +21,16 @@ public class QuizInfo { // this class is the same as what we have in the databas
         this.creationDate = creationDate;
         this.numberOfFavorites = numberOfFavorites;
         this.tags = tags;
+        this.quizGame = quizGame;
     }
 
-    public QuizInfo(String name, String description, int creatorId, Date creationDate) { // this constructor should only be used when we create a new quiz
+    public QuizInfo(String name, String description, int creatorId, QuizGame quizGame) { // this constructor should only be used when we create a new quiz
         this.name = name;
         this.description = description;
         this.creatorId = creatorId;
-        this.creationDate = creationDate;
         this.numberOfFavorites = numberOfFavorites;
         this.tags = tags;
+        this.quizGame = quizGame;
     }
 
     public void setNumberOfFavorites(int numberOfFavorites) {
@@ -55,7 +57,7 @@ public class QuizInfo { // this class is the same as what we have in the databas
         return creatorId;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 

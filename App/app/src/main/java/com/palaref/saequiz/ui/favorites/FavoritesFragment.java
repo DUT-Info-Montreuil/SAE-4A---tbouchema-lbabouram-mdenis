@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.palaref.saequiz.databinding.FragmentFavoritesBinding;
 
+import quiz.api.integration.QuizRequests;
+import quiz.api.integration.UserRequests;
+
 public class FavoritesFragment extends Fragment {
 
     private FragmentFavoritesBinding binding;
@@ -21,6 +24,9 @@ public class FavoritesFragment extends Fragment {
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
 
         final TextView textView = binding.textFavorites;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

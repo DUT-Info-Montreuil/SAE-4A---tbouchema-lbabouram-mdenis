@@ -27,6 +27,9 @@ import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.Objects;
 
+import quiz.api.integration.QuizRequests;
+import quiz.api.integration.UserRequests;
+
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
@@ -58,6 +61,9 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
+
         final TextView textView = binding.textProfile;
         profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -66,7 +72,6 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             loginLauncher.launch(intent);
         });
-
 
         logoutButton = binding.logoutButton;
         logoutButton.setOnClickListener(v -> {

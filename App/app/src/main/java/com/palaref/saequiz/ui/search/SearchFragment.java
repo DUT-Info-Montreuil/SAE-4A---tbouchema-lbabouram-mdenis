@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.databinding.FragmentSearchBinding;
+import com.palaref.saequiz.model.User;
+
+import quiz.api.integration.QuizRequests;
+import quiz.api.integration.UserRequests;
 
 public class SearchFragment extends Fragment {
 
@@ -28,6 +32,9 @@ public class SearchFragment extends Fragment {
 
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
 
         final TextView textView = binding.textSearch;
         searchViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
