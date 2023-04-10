@@ -51,28 +51,38 @@ public class QuizGameActivity extends AppCompatActivity {
     private void setupListeners() {
         answer1Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(0)) {
+                correctAnswer();
                 nextQuestion();
+            }
+            else {
+                wrongAnswer();
             }
         });
         answer2Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(1)) {
-                scoreTextView.setText(String.valueOf(quizGame.getScore()));
-                multiplierTextView.setText(String.valueOf(quizGame.getMultiplier()));
+                correctAnswer();
                 nextQuestion();
+            }
+            else {
+                wrongAnswer();
             }
         });
         answer3Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(2)) {
-                scoreTextView.setText(String.valueOf(quizGame.getScore()));
-                multiplierTextView.setText(String.valueOf(quizGame.getMultiplier()));
+                correctAnswer();
                 nextQuestion();
+            }
+            else {
+                wrongAnswer();
             }
         });
         answer4Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(3)) {
-                scoreTextView.setText(String.valueOf(quizGame.getScore()));
-                multiplierTextView.setText(String.valueOf(quizGame.getMultiplier()));
+                correctAnswer();
                 nextQuestion();
+            }
+            else {
+                wrongAnswer();
             }
         });
     }
