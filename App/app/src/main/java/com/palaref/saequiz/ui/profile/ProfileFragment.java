@@ -37,6 +37,8 @@ public class ProfileFragment extends Fragment {
     private boolean hasPopped = false;
     private Button loginButton;
     private Button logoutButton;
+    private QuizRequests quizRequests;
+    private UserRequests userRequests;
 
     private final ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult( // this is a variable even though it looks like a method
             new ActivityResultContracts.StartActivityForResult(),
@@ -61,8 +63,8 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
-        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
+        quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
 
         final TextView textView = binding.textProfile;
         profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

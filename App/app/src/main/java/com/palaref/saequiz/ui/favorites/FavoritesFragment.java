@@ -18,6 +18,8 @@ import quiz.api.integration.UserRequests;
 public class FavoritesFragment extends Fragment {
 
     private FragmentFavoritesBinding binding;
+    private QuizRequests quizRequests;
+    private UserRequests userRequests;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FavoritesViewModel dashboardViewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
@@ -25,8 +27,8 @@ public class FavoritesFragment extends Fragment {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
-        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
+        quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
 
         final TextView textView = binding.textFavorites;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

@@ -21,6 +21,12 @@ namespace QuizAPI.Controllers
             _env = env;
         }
 
+        [HttpGet("ping")]
+        public String ping()
+        {
+            return "pong";
+        }
+
         [HttpGet]
         public async Task<List<UserProfile>> GetAllUsers()
         {

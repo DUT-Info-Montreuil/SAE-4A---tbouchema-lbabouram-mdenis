@@ -18,6 +18,12 @@ namespace QuizAPI.Controllers
             _mongoDBAuthService = mongoDBAuthService;
         }
 
+        [HttpGet("ping")]
+        public String ping()
+        {
+            return "pong";
+        }
+
         [HttpGet]
         public async Task<List<QuizInfo>> GetAll()
         {
@@ -34,6 +40,12 @@ namespace QuizAPI.Controllers
         public async Task<QuizQuestionnary> GetQuizQuestionnary([FromRoute] string elementId)
         {
             return await _mongoDBQuizService.GetQuizQuestionnaryAsync(elementId);
+        }
+
+        [HttpGet("random/")]
+        public async Task<List<QuizInfo>> GetRandomQuizzes()
+        {
+            return await _mongoDBQuizService.GetRandomQuizzesAsync();
         }
 
         [HttpPost]

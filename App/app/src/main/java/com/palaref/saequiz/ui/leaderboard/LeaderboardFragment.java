@@ -23,6 +23,8 @@ public class LeaderboardFragment extends Fragment {
 
     private LeaderboardViewModel leaderboardViewModel;
     private FragmentLeaderboardBinding binding;
+    private QuizRequests quizRequests;
+    private UserRequests userRequests;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -32,8 +34,8 @@ public class LeaderboardFragment extends Fragment {
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        QuizRequests quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
-        UserRequests userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
+        quizRequests = getArguments().getString("quizRequests") != null ? (QuizRequests) getArguments().getSerializable("quizRequests") : null;
+        userRequests = getArguments().getString("userRequests") != null ? (UserRequests) getArguments().getSerializable("userRequests") : null;
 
         final TextView textView = binding.textLeaderboard;
         leaderboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText); // basically binds the textView to the String in the ViewModel so that it is updated when the String is updated

@@ -9,6 +9,7 @@ namespace QuizAPI.Services
     public class MongoDBQuizService
     {
         private readonly IMongoCollection<QuizInfo> _quizCollection;
+        private List<String> _quizIds = new List<String>();
 
         public MongoDBQuizService(IOptions<MongoDBSettings> mongoDBSettings)
         {
@@ -41,6 +42,23 @@ namespace QuizAPI.Services
 
         public async Task<QuizQuestionnary> GetQuizQuestionnaryAsync(string id)
             => await _quizCollection.Find(quiz => quiz.Id == id).Project(quiz => quiz.QuizQuestionnary).FirstOrDefaultAsync();
+
+        public async Task<List<QuizInfo>> GetRandomQuizzesAsync()
+        {
+            if (_quizIds.Count == 0)
+                _quizIds = await _quizCollection.Find(new BsonDocument()).Project(quiz => quiz.Id).ToListAsync();
+
+            List<QuizInfo> randomQuizzes = new List<QuizInfo>();
+            Random random = new Random();
+            int nbQuiz = _quizIds.Count <= 3 ? _quizIds.Count : 3; // Get 3 random quizzes or less if there are less than 3 quizzes
+            for (int i = 0; i < nbQuiz; i++)
+            {
+                int randomIndex = random.Next(0, _quizIds.Count);
+                randomQuizzes.Add(await _quizCollection.Find(quiz => quiz.Id == _quizIds[randomIndex]).FirstOrDefaultAsync());
+                _quizIds.RemoveAt(randomIndex);
+            }
+            return randomQuizzes;
+        }
 
         public async Task DeleteAsync(string id)
             => await _quizCollection.DeleteOneAsync(quiz => quiz.Id == id);
