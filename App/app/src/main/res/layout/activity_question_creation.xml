@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/answer3_edittext_question_creationPersonName5"
+            android:id="@+id/answer3_edittext_question_creation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -49,7 +49,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/answer3_edittext_question_creation"
+            android:id="@+id/answer4_edittext_question_creation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

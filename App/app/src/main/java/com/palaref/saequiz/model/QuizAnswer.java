@@ -7,9 +7,10 @@ public class QuizAnswer {
     private final boolean isCorrect;
     int answerNumber;
 
-    public QuizAnswer(String answer, boolean isCorrect) {
+    public QuizAnswer(String answer, boolean isCorrect, int answerNumber) {
         this.answer = answer;
         this.isCorrect = isCorrect;
+        this.answerNumber = answerNumber;
     }
 
     public QuizAnswer(int quizAnswerId, int quizQuestionId, String answer, boolean isCorrect, int answerNumber) {

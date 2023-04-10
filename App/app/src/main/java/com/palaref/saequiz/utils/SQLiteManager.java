@@ -266,18 +266,18 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         db.insert(QUESTION_TABLE, null, values);
 
         for(int i = 0; i < question.getAnswers().size(); i++){
-            addAnswer(question.getAnswers().get(i), question.getQuizQuestionId(), i);
+            addAnswer(question.getAnswers().get(i), question.getQuizQuestionId());
         }
     }
 
-    public void addAnswer(QuizAnswer answer, int questionId, int answerNumber){
+    public void addAnswer(QuizAnswer answer, int questionId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(ANSWER_TEXT, answer.getAnswer());
         values.put(ANSWER_IS_CORRECT, answer.isCorrect());
         values.put(ANSWER_QUESTION_ID, questionId);
-        values.put(ANSWER_NUMBER, answerNumber);
+        values.put(ANSWER_NUMBER, answer.getAnswerNumber());
 
         db.insert(ANSWER_TABLE, null, values);
     }

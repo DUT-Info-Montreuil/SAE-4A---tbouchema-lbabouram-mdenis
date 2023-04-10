@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.palaref.saequiz.model.QuizAnswer;
 import com.palaref.saequiz.model.QuizQuestion;
 import com.palaref.saequiz.utils.QuestionAdapter;
 
@@ -28,7 +29,20 @@ public class QuizCreationActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    QuizQuestion question = (QuizQuestion) result.getData().getSerializableExtra("question");
+                    assert result.getData() != null;
+                    String questionText = result.getData().getStringExtra("question");
+                    String answer1 = result.getData().getStringExtra("answer1");
+                    String answer2 = result.getData().getStringExtra("answer2");
+                    String answer3 = result.getData().getStringExtra("answer3");
+                    String answer4 = result.getData().getStringExtra("answer4");
+                    int correctAnswer = result.getData().getIntExtra("correctAnswer", -1);
+                    int questionNumber = result.getData().getIntExtra("questionNumber", -1);
+                    ArrayList<QuizAnswer> answers = new ArrayList<>();
+                    answers.add(new QuizAnswer(answer1, correctAnswer == 0, 1));
+                    answers.add(new QuizAnswer(answer2, correctAnswer == 1, 2));
+                    answers.add(new QuizAnswer(answer3, correctAnswer == 2, 3));
+                    answers.add(new QuizAnswer(answer4, correctAnswer == 3, 4));
+                    QuizQuestion question = new QuizQuestion(questionText, answers, questionNumber);
                     questions.add(question);
                 }
                 else {
@@ -41,10 +55,21 @@ public class QuizCreationActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    QuizQuestion question = (QuizQuestion) result.getData().getSerializableExtra("question");
-                    int index = result.getData().getIntExtra("index", -1);
-                    if (index != -1) {
-                        questions.set(index, question);
+                    assert result.getData() != null;
+                    String questionText = result.getData().getStringExtra("question");
+                    String answer1 = result.getData().getStringExtra("answer1");
+                    String answer2 = result.getData().getStringExtra("answer2");
+                    String answer3 = result.getData().getStringExtra("answer3");
+                    String answer4 = result.getData().getStringExtra("answer4");
+                    int correctAnswer = result.getData().getIntExtra("correctAnswer", -1);
+                    int questionNumber = result.getData().getIntExtra("questionNumber", -1);
+                    if (questionNumber != -1) {
+                        questions.set(questionNumber, new QuizQuestion(questionText, new ArrayList<QuizAnswer>() {{
+                            add(new QuizAnswer(answer1, correctAnswer == 0, 1));
+                            add(new QuizAnswer(answer2, correctAnswer == 1, 2));
+                            add(new QuizAnswer(answer3, correctAnswer == 2, 3));
+                            add(new QuizAnswer(answer4, correctAnswer == 3, 4));
+                        }}, questionNumber));
                     }
                 }
                 else {
@@ -83,7 +108,22 @@ public class QuizCreationActivity extends AppCompatActivity {
     private void setupListeners() {
         addQuestionButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, QuestionCreationActivity.class);
+            intent.putExtra("questionNumber", questions.size());
+            intent.putExtra("isEdit", false);
             questionCreationLauncher.launch(intent);
+        });
+
+        questionsListView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(this, QuestionCreationActivity.class);
+            intent.putExtra("question", questions.get(position).getQuestion());
+            intent.putExtra("answer1", questions.get(position).getAnswers().get(0).getAnswer());
+            intent.putExtra("answer2", questions.get(position).getAnswers().get(1).getAnswer());
+            intent.putExtra("answer3", questions.get(position).getAnswers().get(2).getAnswer());
+            intent.putExtra("answer4", questions.get(position).getAnswers().get(3).getAnswer());
+            intent.putExtra("correctAnswer", questions.get(position).getAnswers().indexOf(questions.get(position).getAnswers().stream().filter(QuizAnswer::isCorrect).findFirst().get()));
+            intent.putExtra("questionNumber", position);
+            intent.putExtra("isEdit", true);
+            questionUpdateLauncher.launch(intent);
         });
     }
 }
