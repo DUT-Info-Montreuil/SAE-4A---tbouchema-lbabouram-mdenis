@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.palaref.saequiz.databinding.FragmentHomeBinding;
 import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.utils.ApiObjectConverters;
 import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.Objects;
@@ -47,8 +48,12 @@ public class HomeFragment extends Fragment {
         super.onStart();
         // this isn't really clean code but it works
 
+
         homeViewModel.getQuizzes().getValue().clear();
-        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
+        if (quizRequests.ping() != null)
+            homeViewModel.getQuizzes().getValue().addAll(ApiObjectConverters.convertMultiQuizInfoApiToQuizInfo(quizRequests.GetRandomQuizzes()));
+        else
+            homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
     }
 
     private void debugList() {
