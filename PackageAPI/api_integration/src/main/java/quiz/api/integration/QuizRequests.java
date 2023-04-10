@@ -27,11 +27,41 @@ import static quiz.api.utils.JsonUtils.createQuizGameJson;
 public class QuizRequests extends ApiClient {
     /**
      * This constructor is used to create a new QuizRequests object
-     * @param host The host of the API <br>
+     * @param host The host of the API declared in the ApiClient <br>
      * Example: http://localhost:8080/
      */
     public QuizRequests(String host) {
         super(host);
+    }
+
+    /**
+     * Refer to QuizRequests class documentation for more information
+     */
+    public String ping() {
+        try {
+            return super.getClient().target(super.getHost() + "api/quiz/ping")
+                    .request()
+                    .get(String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Return 5 random quizzes at each request <br>
+     * If there are less than 5 quizzes in the database it will return all the quizzes which have not been sent yet <br>
+     * After that it will reset the list of quizzes that have been sent and start sending them again <br>
+     * Refer to QuizRequests class documentation for more information
+     */
+    public ArrayList<QuizInfoAPI> GetRandomQuizzes() {
+        try {
+            String response = super.getClient().target(super.getHost() + "api/quiz/random")
+                    .request()
+                    .get(String.class);
+            return JsonUtils.parseJsonToQuizInfoList(response);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -131,16 +161,16 @@ public class QuizRequests extends ApiClient {
      */
     public String PostQuiz(QuizInfoAPI quizInfoAPI) {
         JsonArrayBuilder tags = Json.createArrayBuilder();
-        for (String tag : quizInfoAPI.getQuizTags()) {
+        for (String tag : quizInfoAPI.getTags()) {
             tags.add(tag);
         }
 
         JsonObject quizJson = Json.createObjectBuilder()
-                .add("quizName", quizInfoAPI.getQuizName())
-                .add("quizDescription", quizInfoAPI.getQuizDescription())
+                .add("quizName", quizInfoAPI.getName())
+                .add("quizDescription", quizInfoAPI.getDescription())
                 .add("quiztags", tags)
-                .add("quizCreatorId", quizInfoAPI.getQuizCreator())
-                .add("quizQuestionnary", createQuizGameJson(quizInfoAPI.getQuizQuestionnary()))
+                .add("quizCreatorId", quizInfoAPI.getCreator())
+                .add("quizQuestionnary", createQuizGameJson(quizInfoAPI.getGame()))
                 .build();
 
         String response = super.getClient().target(super.getHost() + "api/quiz")

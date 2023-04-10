@@ -8,18 +8,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class JsonUtils {
     /**
-     * Parse a json string to a UserProfile ArrayList
+     * Parse a json string to a UserAPI ArrayList
      * @param jsonString
      * @param userRequests
-     * @return ArrayList<UserProfile>
+     * @return ArrayList<UserAPI>
      * @throws FileNotFoundException
      */
-    public static ArrayList<UserProfile> parseJsonToUserList(String jsonString, UserRequests userRequests) throws FileNotFoundException {
-        ArrayList<UserProfile> userProfiles = new ArrayList<>();
+    public static ArrayList<UserAPI> parseJsonToUserList(String jsonString, UserRequests userRequests) throws FileNotFoundException {
+        ArrayList<UserAPI> userAPIS = new ArrayList<>();
 
         JsonReader reader = Json.createReader(new FileInputStream(jsonString));
         JsonArray jsonArray = reader.readArray();
@@ -27,6 +30,7 @@ public class JsonUtils {
 
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject jsonObject = jsonArray.getJsonObject(i);
+            String id = jsonObject.getString("id");
             String pseudo = jsonObject.getString("pseudo");
             String email = jsonObject.getString("email");
             int score = jsonObject.getInt("score");
@@ -50,11 +54,11 @@ public class JsonUtils {
             }
 
             File profilePicture = userRequests.GetUserProfilePicture(jsonObject.getString("id"));
-            UserProfile userProfile = new UserProfile(pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
-            userProfiles.add(userProfile);
+            UserAPI userAPI = new UserAPI(id, pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
+            userAPIS.add(userAPI);
         }
 
-        return userProfiles;
+        return userAPIS;
     }
 
     /**
@@ -72,7 +76,13 @@ public class JsonUtils {
             String id = jsonObject.getString("id");
             String quizName = jsonObject.getString("quizName");
             String quizDescription = jsonObject.getString("quizDescription");
-            String quizCreator = jsonObject.getString("quizCreatorId");
+            String quizCreatorId = jsonObject.getString("quizCreatorId");
+            String quizCreationDate = jsonObject.getString("quizCreationDate");
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormat.parse(quizCreationDate, new java.text.ParsePosition(0));
+            String quizCreationDateFormatted = dateFormat.format(date);
+
 
             JsonArray quizTagsJsonArray = jsonObject.getJsonArray("quiztags");
             ArrayList<String> quizTags = new ArrayList<>();
@@ -100,7 +110,7 @@ public class JsonUtils {
                 QuizQuestion quizQuestion = new QuizQuestion(question, quizAnswers);
                 quizQuestions.add(quizQuestion);
             }
-            quizInfoAPIList.add(new QuizInfoAPI(id, quizName, quizDescription, quizCreator, quizTags, new QuizGame(quizQuestions)));
+            quizInfoAPIList.add(new QuizInfoAPI(id, quizName, quizDescription, quizCreatorId, quizTags, new QuizGame(quizQuestions), quizCreationDateFormatted));
         }
         jsonReader.close();
         return quizInfoAPIList;
@@ -119,6 +129,12 @@ public class JsonUtils {
         String quizName = quizObject.getString("quizName");
         String quizDescription = quizObject.getString("quizDescription");
         String quizCreatorId = quizObject.getString("quizCreatorId");
+        String quizCreationDate = quizObject.getString("quizCreationDate");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = dateFormat.parse(quizCreationDate, new java.text.ParsePosition(0));
+        String quizCreationDateFormatted = dateFormat.format(date);
+
         ArrayList<String> quizTags = new ArrayList<String>();
         JsonArray tagsArray = quizObject.getJsonArray("quiztags");
         for (int i = 0; i < tagsArray.size(); i++) {
@@ -145,18 +161,19 @@ public class JsonUtils {
             questions.add(quizQuestion);
         }
 
-        return new QuizInfoAPI(id,quizName, quizDescription, quizCreatorId, quizTags, new QuizGame(questions));
+        return new QuizInfoAPI(id,quizName, quizDescription, quizCreatorId, quizTags, new QuizGame(questions), quizCreationDateFormatted);
     }
 
     /**
-     * Parse a json string to a unique UserProfile
+     * Parse a json string to a unique UserAPI
      * @param json
      * @param userRequests
-     * @return UserProfile
+     * @return UserAPI
      * @throws FileNotFoundException
      */
-    public static UserProfile parseJsonToUserProfile(String json, UserRequests userRequests) throws FileNotFoundException {
+    public static UserAPI parseJsonToUserProfile(String json, UserRequests userRequests) throws FileNotFoundException {
         JsonObject jsonObject = Json.createReader(new StringReader(json)).readObject();
+        String id = jsonObject.getString("id");
         String pseudo = jsonObject.getString("pseudo");
         String email = jsonObject.getString("email");
         int score = jsonObject.getInt("score");
@@ -180,7 +197,7 @@ public class JsonUtils {
         }
 
         File profilePicture = userRequests.GetUserProfilePicture(jsonObject.getString("id"));
-        return new UserProfile(pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
+        return new UserAPI(id, pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
     }
 
     /**

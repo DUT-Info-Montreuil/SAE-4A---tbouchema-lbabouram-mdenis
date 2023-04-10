@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import quiz.api.connection.ApiClient;
-import quiz.api.dto.UserProfile;
+import quiz.api.dto.UserAPI;
 import quiz.api.utils.JsonUtils;
 
 import java.io.File;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Each Update method used in this class will need the <b>userid</b> and the <b>elementid</b> and will return the response of the server if it succeeds otherwise they will return <b>null</b> <br> <br>
  * The <b>userid</b> is the id of the user that is logged in and the <b>elementid</b> is the id of the element that is being updated. <br> <br>
  * The last parameter if there is one is the new value of the element. <br> <br>
- * The Get methods will only need the <b>elementid</b> except <br> <pre>GetAllUsers()</pre> and will return a <b>UserProfile</b> object if the request succeeds otherwise they will return <b>null</b> <br>
+ * The Get methods will only need the <b>elementid</b> except <br> <pre>GetAllUsers()</pre> and will return a <b>UserAPI</b> object if the request succeeds otherwise they will return <b>null</b> <br>
  */
 public class UserRequests extends ApiClient {
     /**
      * This constructor is used to create a new UserRequests object
-     * @param host The host of the API <br>
+     * @param host The host of the API declared in the ApiClient<br>
      * Example: http://localhost:8080/
      */
     public UserRequests(String host) {
@@ -31,7 +31,20 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public ArrayList<UserProfile> GetAllUsers() {
+    public String ping() {
+        try {
+            return super.getClient().target(super.getHost() + "api/user/ping")
+                    .request()
+                    .get(String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Refer to UserRequests class documentation for more information
+     */
+    public ArrayList<UserAPI> GetAllUsers() {
         try {
             String response = super.getClient().target(super.getHost() + "api/user/")
                     .request()
@@ -45,7 +58,7 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public UserProfile GetUserById(String elementid) {
+    public UserAPI GetUserById(String elementid) {
         try {
             String url = super.getHost() + "api/user/byid/" + elementid;
             String response = super.getClient().target(url)
