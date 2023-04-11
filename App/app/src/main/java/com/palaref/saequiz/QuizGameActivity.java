@@ -85,22 +85,31 @@ public class QuizGameActivity extends AppCompatActivity {
 
     private void correctAnswer() {
         // toast and delay for 1 second
+        setButtonActive(false);
+        Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+        scoreTextView.setText(String.valueOf("Score : " + quizGame.getScore()));
+        multiplierTextView.setText(String.valueOf("x" + quizGame.getMultiplier()));
         new Handler().postDelayed(() -> {
-            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-            scoreTextView.setText(String.valueOf("Score : " + quizGame.getScore()));
-            multiplierTextView.setText(String.valueOf("x" + quizGame.getMultiplier()));
             nextQuestion();
         }, 1000);
     }
 
     private void wrongAnswer() {
         // toast and delay for 1 second
+        setButtonActive(false);
+        Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
+        scoreTextView.setText(String.valueOf("Score : " + quizGame.getScore()));
+        multiplierTextView.setText(String.valueOf("x" + quizGame.getMultiplier()));
         new Handler().postDelayed(() -> {
-            Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
-            scoreTextView.setText(String.valueOf("Score : " + quizGame.getScore()));
-            multiplierTextView.setText(String.valueOf("x" + quizGame.getMultiplier()));
             nextQuestion();
         }, 1000);
+    }
+
+    private void setButtonActive(boolean active) {
+        answer1Button.setEnabled(active);
+        answer2Button.setEnabled(active);
+        answer3Button.setEnabled(active);
+        answer4Button.setEnabled(active);
     }
 
     private void nextQuestion() {
@@ -120,5 +129,6 @@ public class QuizGameActivity extends AppCompatActivity {
         answer4Button.setText(quizQuestion.getAnswers().get(3).getAnswer());
         scoreTextView.setText(String.valueOf("Score : " + quizGame.getScore()));
         multiplierTextView.setText(String.valueOf("x" + quizGame.getMultiplier()));
+        setButtonActive(true);
     }
 }
