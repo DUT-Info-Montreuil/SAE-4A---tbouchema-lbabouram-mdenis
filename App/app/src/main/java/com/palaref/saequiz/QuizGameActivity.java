@@ -52,7 +52,6 @@ public class QuizGameActivity extends AppCompatActivity {
         answer1Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(0)) {
                 correctAnswer();
-                nextQuestion();
             }
             else {
                 wrongAnswer();
@@ -61,7 +60,6 @@ public class QuizGameActivity extends AppCompatActivity {
         answer2Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(1)) {
                 correctAnswer();
-                nextQuestion();
             }
             else {
                 wrongAnswer();
@@ -70,7 +68,6 @@ public class QuizGameActivity extends AppCompatActivity {
         answer3Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(2)) {
                 correctAnswer();
-                nextQuestion();
             }
             else {
                 wrongAnswer();
@@ -79,7 +76,6 @@ public class QuizGameActivity extends AppCompatActivity {
         answer4Button.setOnClickListener(v -> {
             if (quizGame.checkAnswer(3)) {
                 correctAnswer();
-                nextQuestion();
             }
             else {
                 wrongAnswer();

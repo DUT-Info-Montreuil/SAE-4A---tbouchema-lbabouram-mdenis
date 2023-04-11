@@ -34,7 +34,7 @@ public class QuizGame {
     }
 
     public boolean checkAnswer(int answerNumber) {
-        if (questions.get(currentQuestionIndex).getAnswers().get(answerNumber).isCorrect()) {
+        if (questions.get(currentQuestionIndex - 1).getAnswers().get(answerNumber).isCorrect()) {
             addScore(10 * multiplier++);
             return true;
         }else {
