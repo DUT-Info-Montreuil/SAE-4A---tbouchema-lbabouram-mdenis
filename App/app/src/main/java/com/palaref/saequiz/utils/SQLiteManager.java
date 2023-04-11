@@ -195,7 +195,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(CREATOR_ID_FIELD, quiz.getCreatorId());
         values.put(CREATION_DATE_FIELD, quiz.getCreationDate().toString());
 
-        db.insert(QUIZINFO_TABLE, null, values);
+        long id = db.insert(QUIZINFO_TABLE, null, values);
+        quiz.setId((int) id);
     }
 
     public ArrayList<QuizInfo> getAllQuizInfos(){
@@ -268,9 +269,11 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         ContentValues values = new ContentValues();
         values.put(QUIZGAME_QUIZINFO_ID, quizGame.getQuizInfoId());
 
-        db.insert(QUIZGAME_TABLE, null, values);
+        long id = db.insert(QUIZGAME_TABLE, null, values);
+        // quizgame has an id of 0 because it's not set yet by the database so we need to get it from the database
+        quizGame.setQuizId((int) id);
         for(int i = 0; i < quizGame.getQuestions().size(); i++){
-            addQuestion(quizGame.getQuestions().get(i), quizGame.getQuizId(), i);
+            addQuestion(quizGame.getQuestions().get(i), ((int) id), i);
         }
     }
 
@@ -282,8 +285,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(QUESTION_QUIZGAME_ID, quizGameId);
         values.put(QUESTION_NUMBER, questionNumber);
 
-        db.insert(QUESTION_TABLE, null, values);
-
+        long id = db.insert(QUESTION_TABLE, null, values);
+        question.setQuizQuestionId((int) id);
         for(int i = 0; i < question.getAnswers().size(); i++){
             addAnswer(question.getAnswers().get(i), question.getQuizQuestionId());
         }
@@ -298,7 +301,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(ANSWER_QUESTION_ID, questionId);
         values.put(ANSWER_NUMBER, answer.getAnswerNumber());
 
-        db.insert(ANSWER_TABLE, null, values);
+        long id = db.insert(ANSWER_TABLE, null, values);
+        answer.setQuizAnswerId((int) id);
     }
 
     public ArrayList<QuizAnswer> getQuizAnswers(int questionId){

@@ -42,4 +42,12 @@ public class QuizQuestion {
     public int getQuestionNumber() {
         return questionNumber;
     }
+
+    public void setQuizQuestionId(int quizQuestionId) {
+        this.quizQuestionId = quizQuestionId;
+    }
+
+    public void setQuizGameId(int quizGameId) {
+        this.quizGameId = quizGameId;
+    }
 }

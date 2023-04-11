@@ -74,4 +74,12 @@ public class QuizGame {
     public void setMultiplier(int multiplier) {
         this.multiplier = multiplier;
     }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
+    }
+
+    public void setQuizInfoId(int quizInfoId) {
+        this.quizInfoId = quizInfoId;
+    }
 }

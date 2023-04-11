@@ -40,4 +40,12 @@ public class QuizAnswer {
     public int getAnswerNumber() {
         return answerNumber;
     }
+
+    public void setQuizAnswerId(int quizAnswerId) {
+        this.quizAnswerId = quizAnswerId;
+    }
+
+    public void setQuizQuestionId(int quizQuestionId) {
+        this.quizQuestionId = quizQuestionId;
+    }
 }

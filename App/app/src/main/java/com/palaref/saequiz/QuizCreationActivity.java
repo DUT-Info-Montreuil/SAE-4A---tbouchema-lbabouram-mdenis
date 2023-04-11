@@ -146,7 +146,7 @@ public class QuizCreationActivity extends AppCompatActivity {
         QuizInfo quizInfo = new QuizInfo(quizNameEditText.getText().toString(), quizDescriptionEditText.getText().toString(), MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), SQLiteManager.getNowDate());
         sqLiteManager.addQuiz(quizInfo);
         // quizgame : array of questions, quizInfoId
-        QuizGame quizGame = new QuizGame(questions, sqLiteManager.getQuizByName(quizInfo.getName()).getId());
+        QuizGame quizGame = new QuizGame(questions, quizInfo.getId());
         sqLiteManager.addQuizGame(quizGame);
         //delay and toast
         new Handler().postDelayed(() -> Toast.makeText(this, "Quiz created successfully!", Toast.LENGTH_SHORT).show(), 1000);
