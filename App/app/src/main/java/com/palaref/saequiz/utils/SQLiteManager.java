@@ -102,6 +102,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append(QUESTION_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(QUESTION_QUIZGAME_ID).append(" INT, ")
                 .append(QUESTION_TEXT).append(" TEXT, ")
+                .append(QUESTION_NUMBER).append(" INT, ")
                 .append("FOREIGN KEY(").append(QUESTION_QUIZGAME_ID).append(") REFERENCES ")
                 .append(QUIZGAME_TABLE).append("(").append(QUIZGAME_ID).append("));");
         db.execSQL(sql.toString());
@@ -226,6 +227,24 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 Date creationDate = convertStringToDate(result.getString(4));
                 quiz = new QuizInfo(id, name, description, creatorId, creationDate);
             }
+        }
+        return quiz;
+    }
+
+    public QuizInfo getQuizByName(String name){
+        SQLiteDatabase db = getReadableDatabase();
+        QuizInfo quiz = null;
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + NAME_FIELD + "=?", new String[]{name})){
+            if(result.moveToFirst()){
+                int id = result.getInt(0);
+                String name1 = result.getString(1);
+                String description = result.getString(2);
+                int creatorId = result.getInt(3);
+                Date creationDate = convertStringToDate(result.getString(4));
+                quiz = new QuizInfo(id, name1, description, creatorId, creationDate);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return quiz;
     }

@@ -7,14 +7,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.palaref.saequiz.model.QuizAnswer;
+import com.palaref.saequiz.model.QuizGame;
+import com.palaref.saequiz.model.QuizInfo;
 import com.palaref.saequiz.model.QuizQuestion;
 import com.palaref.saequiz.utils.QuestionAdapter;
+import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.ArrayList;
 
@@ -125,5 +129,27 @@ public class QuizCreationActivity extends AppCompatActivity {
             intent.putExtra("isEdit", true);
             questionUpdateLauncher.launch(intent);
         });
+
+        submitQuizButton.setOnClickListener(v -> submitQuiz());
+    }
+
+    private void checkIfSubmitIsPossible() {
+        submitQuizButton.setEnabled(quizNameEditText.getText().toString().length() > 0
+                && quizDescriptionEditText.getText().toString().length() > 0
+                && questions.size() > 0);
+    }
+
+    // creates quizInfo and quizGame objects and saves them to the database
+    private void submitQuiz() {
+        SQLiteManager sqLiteManager = SQLiteManager.getInstance(this);
+        // quizinfo : name, description, creatorId, date
+        QuizInfo quizInfo = new QuizInfo(quizNameEditText.getText().toString(), quizDescriptionEditText.getText().toString(), MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), SQLiteManager.getNowDate());
+        sqLiteManager.addQuiz(quizInfo);
+        // quizgame : array of questions, quizInfoId
+        QuizGame quizGame = new QuizGame(questions, sqLiteManager.getQuizByName(quizInfo.getName()).getId());
+        sqLiteManager.addQuizGame(quizGame);
+        //delay and toast
+        new Handler().postDelayed(() -> Toast.makeText(this, "Quiz created successfully!", Toast.LENGTH_SHORT).show(), 1000);
+        finish();
     }
 }
