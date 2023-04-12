@@ -1,6 +1,7 @@
 package com.palaref.saequiz.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.palaref.saequiz.MainActivity;
+import com.palaref.saequiz.QuizOverviewActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
 
@@ -38,6 +40,12 @@ public class QuizGridAdapter extends ArrayAdapter<QuizInfo> {
         TextView creatorName = convertView.findViewById(R.id.creator_textview_favorites_cell);
         creatorName.setText("By : " + SQLiteManager.getInstance(getContext()).getUserById(currentQuiz.getCreatorId()).getUsername());
 
+        mainText.setOnClickListener(v -> {
+            // start QuizOverviewActivity
+            Intent intent = new Intent(getContext(), QuizOverviewActivity.class);
+            intent.putExtra("quizId", currentQuiz.getId());
+            getContext().startActivity(intent);
+        });
         return convertView;
     }
 }
