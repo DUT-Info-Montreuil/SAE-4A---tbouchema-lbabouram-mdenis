@@ -93,21 +93,18 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     inflater.getContext().startActivity(intent);
                 }
             });
-            quizViewHolder.heartIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int userId = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
-                    SQLiteManager sqliteManager = SQLiteManager.getInstance(inflater.getContext());
-                    if(userId == -1)
-                        Toast.makeText(inflater.getContext(), "Please log in to favorite quizzes", Toast.LENGTH_SHORT).show();
+            quizViewHolder.heartIcon.setOnClickListener(v -> {
+                int userId = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
+                SQLiteManager sqliteManager = SQLiteManager.getInstance(inflater.getContext());
+                if(userId == -1)
+                    Toast.makeText(inflater.getContext(), "Please log in to favorite quizzes", Toast.LENGTH_SHORT).show();
 
-                    if(sqliteManager.isQuizFavorite(userId, quizInfo.getId())) {
-                        sqliteManager.removeFavoriteForUser(userId, quizInfo.getId());
-                        quizViewHolder.heartIcon.setImageResource(R.drawable.emptyheart);
-                    } else {
-                        sqliteManager.addFavoriteForUser(userId, quizInfo.getId());
-                        quizViewHolder.heartIcon.setImageResource(R.drawable.heart);
-                    }
+                if(sqliteManager.isQuizFavorite(userId, quizInfo.getId())) {
+                    sqliteManager.removeFavoriteForUser(userId, quizInfo.getId());
+                    quizViewHolder.heartIcon.setImageResource(R.drawable.emptyheart);
+                } else {
+                    sqliteManager.addFavoriteForUser(userId, quizInfo.getId());
+                    quizViewHolder.heartIcon.setImageResource(R.drawable.heart);
                 }
             });
         }

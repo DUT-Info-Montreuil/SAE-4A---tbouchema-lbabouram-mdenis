@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
 
@@ -31,6 +34,9 @@ public class QuizGridAdapter extends ArrayAdapter<QuizInfo> {
 
         TextView mainText = convertView.findViewById(R.id.quiz_main_textview_favorite);
         mainText.setText(currentQuiz.getName());
+
+        TextView creatorName = convertView.findViewById(R.id.creator_textview_favorites_cell);
+        creatorName.setText("By : " + SQLiteManager.getInstance(getContext()).getUserById(currentQuiz.getCreatorId()).getUsername());
 
         return convertView;
     }

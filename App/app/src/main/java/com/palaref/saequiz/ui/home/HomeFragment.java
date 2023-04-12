@@ -47,8 +47,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
         return root;
     }
 
@@ -56,7 +54,6 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         setupAdapter();
-
     }
 
     private void debugList() {

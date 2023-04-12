@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -94,6 +96,7 @@ public class QuizCreationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setupList();
+        checkIfSubmitIsPossible();
     }
 
     private void setupList(){
@@ -131,6 +134,31 @@ public class QuizCreationActivity extends AppCompatActivity {
         });
 
         submitQuizButton.setOnClickListener(v -> submitQuiz());
+
+        setupListenersToCheckIfSubmitIsPossible();
+    }
+
+    private void setupListenersToCheckIfSubmitIsPossible() {
+        quizNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfSubmitIsPossible();
+            }
+        });
+        quizDescriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfSubmitIsPossible();
+            }
+        });
     }
 
     private void checkIfSubmitIsPossible() {
