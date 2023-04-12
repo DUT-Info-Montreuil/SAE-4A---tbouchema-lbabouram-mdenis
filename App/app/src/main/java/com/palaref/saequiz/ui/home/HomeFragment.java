@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        setupAdapter();
+
 
         return root;
     }
@@ -55,9 +55,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // this isn't really clean code but it works
-        homeViewModel.getQuizzes().getValue().clear();
-        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
+        setupAdapter();
+
     }
 
     private void debugList() {
@@ -72,6 +71,8 @@ public class HomeFragment extends Fragment {
 
     private void setupAdapter() {
         RecyclerView recyclerView = binding.recyclerView;
+        homeViewModel.getQuizzes().getValue().clear();
+        homeViewModel.getQuizzes().getValue().addAll(SQLiteManager.getInstance(this.getContext()).getAllQuizInfos());
         QuizAdapter adapter = new QuizAdapter(getContext(), homeViewModel.getMonthlyQuiz().getValue(), homeViewModel.getQuizzes().getValue());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

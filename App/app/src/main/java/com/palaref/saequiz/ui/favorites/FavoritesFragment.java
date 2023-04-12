@@ -56,9 +56,13 @@ public class FavoritesFragment extends Fragment {
         switch (favoritesViewModel.getState().getValue()) {
             case "fav":
                 gridView.setAdapter(new QuizGridAdapter(getContext(), sqLiteManager.getAllFavoritesOfUser(userId)));
+                binding.yourFavoritesButtonFavorite.setAlpha(1f);
+                binding.yourQuizzesButtonFavorite.setAlpha(0.5f);
                 break;
             case "my":
                 gridView.setAdapter(new QuizGridAdapter(getContext(), sqLiteManager.getAllQuizzesOfUser(userId)));
+                binding.yourFavoritesButtonFavorite.setAlpha(0.5f);
+                binding.yourQuizzesButtonFavorite.setAlpha(1f);
                 break;
         }
     }

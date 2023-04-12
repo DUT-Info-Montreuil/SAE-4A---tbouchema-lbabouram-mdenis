@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 public class FavoritesViewModel extends ViewModel {
 
-    private final MutableLiveData<String> state; // either fav or my
+    private final MutableLiveData<String> state; // either "fav" or "my"
 
     public FavoritesViewModel() {
         state = new MutableLiveData<>();
