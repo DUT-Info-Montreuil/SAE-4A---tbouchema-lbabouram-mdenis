@@ -2,35 +2,47 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/heart_imageview_favorites_cell"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="64dp">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/bottom_bar"
-                android:layout_width="256dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="-20dp"
-                android:elevation="10dp"
-                app:layout_constraintBottom_toBottomOf="@+id/main_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/home_quiz_bar_shape" />
+        <ImageView
+            android:id="@+id/bottom_bar"
+            android:layout_width="256dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="-20dp"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/main_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/home_quiz_bar_shape" />
 
-            <Button
-                android:id="@+id/main_button"
-                android:layout_width="256dp"
-                android:layout_height="128dp"
-                android:background="@drawable/home_quiz_shape"
-                android:text="@string/title_home"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/main_button"
+            android:layout_width="256dp"
+            android:layout_height="128dp"
+            android:background="@drawable/home_quiz_shape"
+            android:text="@string/title_home"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/heart_imageview_main_quiz"
+            android:layout_width="43dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="8dp"
+            android:elevation="10dp"
+            android:rotation="17"
+            app:layout_constraintBottom_toBottomOf="@+id/bottom_bar"
+            app:layout_constraintStart_toStartOf="@+id/bottom_bar"
+            app:srcCompat="@drawable/heart" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

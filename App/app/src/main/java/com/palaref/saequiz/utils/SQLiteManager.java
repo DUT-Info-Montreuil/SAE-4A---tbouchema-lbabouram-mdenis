@@ -32,11 +32,11 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final int DB_VERSION = 1;
 
     private static final String QUIZINFO_TABLE = "quizinfos";
-    private static final String ID_FIELD = "id";
-    private static final String NAME_FIELD = "name";
-    private static final String DESCRIPTION_FIELD = "description";
-    private static final String CREATOR_ID_FIELD = "creator_id";
-    private static final String CREATION_DATE_FIELD = "creation_date";
+    private static final String QUIZINFO_ID = "id";
+    private static final String QUIZINFO_NAME = "name";
+    private static final String QUIZINFO_DESCRIPTION = "description";
+    private static final String QUIZINFO_CREATOR_ID = "creator_id";
+    private static final String QUIZINFO_CREATION_DATE = "creation_date";
 
     private static final String USERS_TABLE = "users";
     private static final String USERS_ID = "id";
@@ -61,6 +61,12 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String ANSWER_IS_CORRECT = "is_correct";
     private static final String ANSWER_NUMBER = "number";
 
+    private static final String FAVORITES_TABLE = "favorites";
+    private static final String FAVORITES_ID = "id";
+    private static final String FAVORITES_USER_ID = "user_id";
+    private static final String FAVORITES_QUIZINFO_ID = "quizinfo_id";
+
+
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -82,20 +88,20 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         db.execSQL(sql.toString());
 
         sql = new StringBuilder().append("CREATE TABLE ").append(QUIZINFO_TABLE).append(" (")
-                .append(ID_FIELD).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                .append(NAME_FIELD).append(" TEXT, ")
-                .append(DESCRIPTION_FIELD).append(" TEXT, ")
-                .append(CREATOR_ID_FIELD).append(" INT, ")
-                .append(CREATION_DATE_FIELD).append(" TEXT, ")
-                .append("FOREIGN KEY(").append(CREATOR_ID_FIELD).append(") REFERENCES ")
-                .append(USERS_TABLE).append("(").append(CREATOR_ID_FIELD).append("));");
+                .append(QUIZINFO_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(QUIZINFO_NAME).append(" TEXT, ")
+                .append(QUIZINFO_DESCRIPTION).append(" TEXT, ")
+                .append(QUIZINFO_CREATOR_ID).append(" INT, ")
+                .append(QUIZINFO_CREATION_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(QUIZINFO_CREATOR_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(QUIZINFO_CREATOR_ID).append("));");
         db.execSQL(sql.toString());
 
         sql = new StringBuilder().append("CREATE TABLE ").append(QUIZGAME_TABLE).append(" (")
                 .append(QUIZGAME_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(QUIZGAME_QUIZINFO_ID).append(" INT, ")
                 .append("FOREIGN KEY(").append(QUIZGAME_QUIZINFO_ID).append(") REFERENCES ")
-                .append(QUIZINFO_TABLE).append("(").append(ID_FIELD).append("));");
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
 
         sql = new StringBuilder().append("CREATE TABLE ").append(QUESTION_TABLE).append(" (")
@@ -115,6 +121,16 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append(ANSWER_NUMBER).append(" INT, ")
                 .append("FOREIGN KEY(").append(ANSWER_QUESTION_ID).append(") REFERENCES ")
                 .append(QUESTION_TABLE).append("(").append(QUESTION_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(FAVORITES_TABLE).append(" (")
+                .append(FAVORITES_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(FAVORITES_USER_ID).append(" INT, ")
+                .append(FAVORITES_QUIZINFO_ID).append(" INT, ")
+                .append("FOREIGN KEY(").append(FAVORITES_USER_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
+                .append("FOREIGN KEY(").append(FAVORITES_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
     }
 
@@ -190,10 +206,10 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(NAME_FIELD, quiz.getName());
-        values.put(DESCRIPTION_FIELD, quiz.getDescription());
-        values.put(CREATOR_ID_FIELD, quiz.getCreatorId());
-        values.put(CREATION_DATE_FIELD, quiz.getCreationDate().toString());
+        values.put(QUIZINFO_NAME, quiz.getName());
+        values.put(QUIZINFO_DESCRIPTION, quiz.getDescription());
+        values.put(QUIZINFO_CREATOR_ID, quiz.getCreatorId());
+        values.put(QUIZINFO_CREATION_DATE, quiz.getCreationDate().toString());
 
         long id = db.insert(QUIZINFO_TABLE, null, values);
         quiz.setId((int) id);
@@ -220,7 +236,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     public QuizInfo getQuizInfoById(int id){
         SQLiteDatabase db = getReadableDatabase();
         QuizInfo quiz = null;
-        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + ID_FIELD + " = " + id, null)){
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + QUIZINFO_ID + " = " + id, null)){
             if(result.moveToFirst()){
                 String name = result.getString(1);
                 String description = result.getString(2);
@@ -235,7 +251,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     public QuizInfo getQuizByName(String name){
         SQLiteDatabase db = getReadableDatabase();
         QuizInfo quiz = null;
-        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + NAME_FIELD + "=?", new String[]{name})){
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + QUIZINFO_NAME + "=?", new String[]{name})){
             if(result.moveToFirst()){
                 int id = result.getInt(0);
                 String name1 = result.getString(1);
@@ -254,13 +270,13 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ID_FIELD, quizInfo.getId());
-        values.put(NAME_FIELD, quizInfo.getName());
-        values.put(DESCRIPTION_FIELD, quizInfo.getDescription());
-        values.put(CREATOR_ID_FIELD, quizInfo.getCreatorId());
-        values.put(CREATION_DATE_FIELD, quizInfo.getCreationDate().toString());
+        values.put(QUIZINFO_ID, quizInfo.getId());
+        values.put(QUIZINFO_NAME, quizInfo.getName());
+        values.put(QUIZINFO_DESCRIPTION, quizInfo.getDescription());
+        values.put(QUIZINFO_CREATOR_ID, quizInfo.getCreatorId());
+        values.put(QUIZINFO_CREATION_DATE, quizInfo.getCreationDate().toString());
 
-        db.update(QUIZINFO_TABLE, values, ID_FIELD + " = ?", new String[]{String.valueOf(quizInfo.getId())});
+        db.update(QUIZINFO_TABLE, values, QUIZINFO_ID + " = ?", new String[]{String.valueOf(quizInfo.getId())});
     }
 
     public void addQuizGame(QuizGame quizGame){ // this should create a quizGame tuple and it's questions and answers
@@ -351,6 +367,66 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
             }
         }
         return quizGame;
+    }
+
+    public void addFavoriteForUser(int userId, int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(FAVORITES_USER_ID, userId);
+        values.put(FAVORITES_QUIZINFO_ID, quizInfoId);
+
+        db.insert(FAVORITES_TABLE, null, values);
+    }
+
+    public void removeFavoriteForUser(int userId, int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(FAVORITES_TABLE, FAVORITES_USER_ID + " = ? AND " + FAVORITES_QUIZINFO_ID + " = ?", new String[]{String.valueOf(userId), String.valueOf(quizInfoId)});
+    }
+
+    public ArrayList<QuizInfo> getAllFavoritesOfUser(int userId){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<QuizInfo> quizInfos = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + QUIZINFO_ID + " IN (SELECT " + FAVORITES_QUIZINFO_ID + " FROM " + FAVORITES_TABLE + " WHERE " + FAVORITES_USER_ID + " = " + userId + ")", null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    String name = result.getString(1);
+                    String description = result.getString(2);
+                    int creatorId = result.getInt(3);
+                    Date creationDate = convertStringToDate(result.getString(4));
+                    quizInfos.add(new QuizInfo(id, name, description, creatorId, creationDate));
+                }
+            }
+        }
+        return quizInfos;
+    }
+
+    public ArrayList<QuizInfo> getAllQuizzesOfUser(int userId){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<QuizInfo> quizInfos = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + QUIZINFO_CREATOR_ID + " = " + userId, null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    String name = result.getString(1);
+                    String description = result.getString(2);
+                    int creatorId = result.getInt(3);
+                    Date creationDate = convertStringToDate(result.getString(4));
+                    quizInfos.add(new QuizInfo(id, name, description, creatorId, creationDate));
+                }
+            }
+        }
+        return quizInfos;
+    }
+
+    public boolean isQuizFavorite(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + FAVORITES_TABLE + " WHERE " + FAVORITES_USER_ID + " = " + userId + " AND " + FAVORITES_QUIZINFO_ID + " = " + quizInfoId, null)){
+            return result.getCount() != 0;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     private Bitmap getBitmapFromByteArray(byte[] data) {
