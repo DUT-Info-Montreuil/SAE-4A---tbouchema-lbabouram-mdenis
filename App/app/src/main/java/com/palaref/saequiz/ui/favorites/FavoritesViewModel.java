@@ -6,14 +6,18 @@ import androidx.lifecycle.ViewModel;
 
 public class FavoritesViewModel extends ViewModel {
 
-    private final MutableLiveData<String> Text;
+    private final MutableLiveData<String> state; // either fav or my
 
     public FavoritesViewModel() {
-        Text = new MutableLiveData<>();
-        Text.setValue("This is the Favorites fragment");
+        state = new MutableLiveData<>();
+        state.setValue("fav");
     }
 
-    public LiveData<String> getText() {
-        return Text;
+    public LiveData<String> getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state.setValue(state);
     }
 }
