@@ -40,12 +40,6 @@ public class QuizGridAdapter extends ArrayAdapter<QuizInfo> {
         TextView creatorName = convertView.findViewById(R.id.creator_textview_favorites_cell);
         creatorName.setText("By : " + SQLiteManager.getInstance(getContext()).getUserById(currentQuiz.getCreatorId()).getUsername());
 
-        mainText.setOnClickListener(v -> {
-            // start QuizOverviewActivity
-            Intent intent = new Intent(getContext(), QuizOverviewActivity.class);
-            intent.putExtra("quizId", currentQuiz.getId());
-            getContext().startActivity(intent);
-        });
         return convertView;
     }
 }
