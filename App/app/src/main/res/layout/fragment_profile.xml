@@ -7,16 +7,20 @@
     tools:context=".ui.profile.ProfileFragment"
     >
 
-     <ImageView
+     <com.palaref.saequiz.ui.profile.CircularImageView
          android:id="@+id/image_profile"
          android:layout_width="93dp"
          android:layout_height="93dp"
          android:layout_marginLeft="16dp"
          android:layout_marginTop="32dp"
          android:src="@drawable/defaultpp1"
+         android:background="@drawable/profil_circle_shape"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toTopOf="parent"
          tools:ignore="MissingConstraints" />
+
+
+
 
      <TextView
          android:layout_width="84dp"
@@ -56,28 +60,25 @@
          tools:text="Bio"
          android:gravity="center"/>
 
-     <!--<Button
+     <Button
          android:id="@+id/logout_button"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Log out"
+         android:layout_width="103dp"
+         android:layout_height="40dp"
          android:backgroundTint="@color/quizSecondary"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
+         android:elevation="4dp"
+         android:text="Log out"
          android:textColor="#De7a22"
-         android:elevation="4dp"/>
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
 
      <Button
          android:id="@+id/login_button_profile_fragment"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginTop="24dp"
-         android:text="Log in"
          android:backgroundTint="@color/quizSecondary"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/text_profile"
+         android:text="Log in"
          android:textColor="#De7a22"
 
-         />-->
+         tools:layout_editor_absoluteX="85dp"
+         tools:layout_editor_absoluteY="204dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
