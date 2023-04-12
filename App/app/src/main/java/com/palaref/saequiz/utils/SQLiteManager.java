@@ -66,6 +66,13 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String FAVORITES_USER_ID = "user_id";
     private static final String FAVORITES_QUIZINFO_ID = "quizinfo_id";
 
+    private static final String BESTSCORES_TABLE = "bestscores";
+    private static final String BESTSCORES_ID = "id";
+    private static final String BESTSCORES_USER_ID = "user_id";
+    private static final String BESTSCORES_QUIZINFO_ID = "quizinfo_id";
+    private static final String BESTSCORES_SCORE = "score";
+    private static final String BESTSCORES_DATE = "date";
+
 
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -130,6 +137,18 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append("FOREIGN KEY(").append(FAVORITES_USER_ID).append(") REFERENCES ")
                 .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
                 .append("FOREIGN KEY(").append(FAVORITES_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(BESTSCORES_TABLE).append(" (")
+                .append(BESTSCORES_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(BESTSCORES_USER_ID).append(" INT, ")
+                .append(BESTSCORES_QUIZINFO_ID).append(" INT, ")
+                .append(BESTSCORES_SCORE).append(" INT, ")
+                .append(BESTSCORES_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(BESTSCORES_USER_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
+                .append("FOREIGN KEY(").append(BESTSCORES_QUIZINFO_ID).append(") REFERENCES ")
                 .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
     }
@@ -427,6 +446,40 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         }catch (Exception e){
             return false;
         }
+    }
+
+    public void addBestScoreForUser(int userId, int quizInfoId, int score){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BESTSCORES_USER_ID, userId);
+        values.put(BESTSCORES_QUIZINFO_ID, quizInfoId);
+        values.put(BESTSCORES_SCORE, score);
+        values.put(BESTSCORES_DATE, getNowDate().toString());
+
+        db.insert(BESTSCORES_TABLE, null, values);
+    }
+
+    public void updateUserBestScore(int userId, int quizInfoId, int score){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BESTSCORES_SCORE, score);
+        values.put(BESTSCORES_DATE, getNowDate().toString());
+
+        db.update(BESTSCORES_TABLE, values, BESTSCORES_USER_ID + " = ? AND " + BESTSCORES_QUIZINFO_ID + " = ?", new String[]{String.valueOf(userId), String.valueOf(quizInfoId)});
+    }
+
+    public int getUserBestScore(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + BESTSCORES_TABLE + " WHERE " + BESTSCORES_USER_ID + " = " + userId + " AND " + BESTSCORES_QUIZINFO_ID + " = " + quizInfoId, null)){
+            if(result.moveToFirst()){
+                return result.getInt(3);
+            }
+        }catch (Exception e){
+            return -1;
+        }
+        return -1;
     }
 
     private Bitmap getBitmapFromByteArray(byte[] data) {

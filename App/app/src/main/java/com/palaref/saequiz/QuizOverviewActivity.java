@@ -33,7 +33,19 @@ public class QuizOverviewActivity extends AppCompatActivity {
                     int score = result.getData().getIntExtra("score", -1);
                     if (score != -1) {
                         // Load user data and update UI
-                        Toast.makeText(this, "Your score was : " + score, Toast.LENGTH_SHORT).show();
+                        int bestScoreInt = SQLiteManager.getInstance(this).getUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId);
+                        if(score > bestScoreInt && bestScoreInt != -1){
+                            Toast.makeText(this, "New best score updated: " + score + " : " + bestScoreInt, Toast.LENGTH_SHORT).show();
+                            bestScore.setText("Best score : " + score);
+                            SQLiteManager.getInstance(this).updateUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
+                        } else if (bestScoreInt != -1){
+                            Toast.makeText(this, "Your score was : " + score, Toast.LENGTH_SHORT).show();
+                            bestScore.setText("Best score : " + bestScoreInt);
+                        }else{
+                            Toast.makeText(this, "New score was : " + score, Toast.LENGTH_SHORT).show();
+                            bestScore.setText("Best score : " + score);
+                            SQLiteManager.getInstance(this).addBestScoreForUser(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
+                        }
                     } else {
                         // Display error message or retry login
                         Toast.makeText(this, "There was an error getting your score", Toast.LENGTH_SHORT).show();
@@ -67,7 +79,7 @@ public class QuizOverviewActivity extends AppCompatActivity {
         quizDescription.setText(quizInfo.getDescription());
         String creatorString = "By : " + sqLiteManager.getUserById(quizInfo.getCreatorId()).getUsername();
         quizCreator.setText(creatorString);
-        bestScore.setText("Best score: not implemented yet"); // TODO: Get best score
+        setupBestScore();
         String tagsString = "Tags: " + Arrays.toString(quizInfo.getTags());
         tags.setText(tagsString); // TODO: Get tags
     }
@@ -86,5 +98,14 @@ public class QuizOverviewActivity extends AppCompatActivity {
         intent.putExtra("quizId", quizId);
         // start activity for result to get the score
         quizLauncher.launch(intent);
+    }
+
+    private void setupBestScore(){
+        int bestScoreInt = SQLiteManager.getInstance(this).getUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId);
+        if(bestScoreInt == -1){
+            bestScore.setText("You don't have any score for this quiz yet");
+        } else {
+            bestScore.setText("Best score : " + bestScoreInt);
+        }
     }
 }
