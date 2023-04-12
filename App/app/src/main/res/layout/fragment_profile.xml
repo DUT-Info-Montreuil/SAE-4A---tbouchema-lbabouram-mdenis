@@ -7,7 +7,7 @@
     tools:context=".ui.profile.ProfileFragment"
     >
 
-     <com.palaref.saequiz.ui.profile.CircularImageView
+     <ImageView
          android:id="@+id/image_profile"
          android:layout_width="93dp"
          android:layout_height="93dp"
