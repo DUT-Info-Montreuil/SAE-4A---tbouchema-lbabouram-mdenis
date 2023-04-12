@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.QuizOverviewActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
@@ -68,6 +70,19 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             QuizInfo quizInfo = quizInfoList.get(position);
             QuizViewHolder quizViewHolder = (QuizViewHolder) holder;
             quizViewHolder.mainButton.setText(quizInfo.getName());
+
+            if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) == -1)
+                quizViewHolder.heartIcon.setVisibility(View.INVISIBLE);
+            else {
+                quizViewHolder.heartIcon.setVisibility(View.VISIBLE);
+                int userId = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
+                SQLiteManager sqliteManager = SQLiteManager.getInstance(inflater.getContext());
+                if(sqliteManager.isQuizFavorite(userId, quizInfo.getId()))
+                    quizViewHolder.heartIcon.setImageResource(R.drawable.heart);
+                else
+                    quizViewHolder.heartIcon.setImageResource(R.drawable.emptyheart);
+            }
+
             // Bind button layout and make buttons launch quiz activity when it is ready
             quizViewHolder.mainButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -76,6 +91,23 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent intent = new Intent(inflater.getContext(), QuizOverviewActivity.class);
                     intent.putExtra("quizId", quizInfo.getId());
                     inflater.getContext().startActivity(intent);
+                }
+            });
+            quizViewHolder.heartIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int userId = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
+                    SQLiteManager sqliteManager = SQLiteManager.getInstance(inflater.getContext());
+                    if(userId == -1)
+                        Toast.makeText(inflater.getContext(), "Please log in to favorite quizzes", Toast.LENGTH_SHORT).show();
+
+                    if(sqliteManager.isQuizFavorite(userId, quizInfo.getId())) {
+                        sqliteManager.removeFavoriteForUser(userId, quizInfo.getId());
+                        quizViewHolder.heartIcon.setImageResource(R.drawable.emptyheart);
+                    } else {
+                        sqliteManager.addFavoriteForUser(userId, quizInfo.getId());
+                        quizViewHolder.heartIcon.setImageResource(R.drawable.heart);
+                    }
                 }
             });
         }
@@ -93,11 +125,13 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ImageView bottomBar;
         Button mainButton;
+        ImageView heartIcon;
 
         public QuizViewHolder(@NonNull View itemView) {
             super(itemView);
             bottomBar = itemView.findViewById(R.id.bottom_bar);
             mainButton = itemView.findViewById(R.id.main_button);
+            heartIcon = itemView.findViewById(R.id.heart_imageview_main_quiz);
         }
     }
     private static class MonthlyQuizViewHolder extends RecyclerView.ViewHolder {

@@ -420,6 +420,15 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         return quizInfos;
     }
 
+    public boolean isQuizFavorite(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + FAVORITES_TABLE + " WHERE " + FAVORITES_USER_ID + " = " + userId + " AND " + FAVORITES_QUIZINFO_ID + " = " + quizInfoId, null)){
+            return result.getCount() != 0;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     private Bitmap getBitmapFromByteArray(byte[] data) {
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }

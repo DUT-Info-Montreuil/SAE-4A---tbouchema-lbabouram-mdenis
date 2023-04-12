@@ -32,5 +32,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/heart_imageview_main_quiz"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
+                android:layout_marginStart="8dp"
+                android:elevation="10dp"
+                android:rotation="17"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_bar"
+                app:layout_constraintStart_toStartOf="@+id/bottom_bar"
+                app:srcCompat="@drawable/heart" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
