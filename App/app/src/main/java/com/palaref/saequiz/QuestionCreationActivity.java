@@ -3,6 +3,8 @@ package com.palaref.saequiz;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -72,29 +74,50 @@ public class QuestionCreationActivity extends AppCompatActivity {
                 checkIfButtonShouldBeActive();
             }
         });
-        answer1EditText.setOnFocusChangeListener((v, hasFocus) -> {
-                    if(!hasFocus){
-                        checkIfButtonShouldBeActive();
-                    }
-                });
-        answer2EditText.setOnFocusChangeListener((v, hasFocus) -> {
-                    if(!hasFocus){
-                        checkIfButtonShouldBeActive();
-                    }
-                });
-        answer3EditText.setOnFocusChangeListener((v, hasFocus) -> {
-                    if(!hasFocus){
-                        checkIfButtonShouldBeActive();
-                    }
-                });
-        answer4EditText.setOnFocusChangeListener((v, hasFocus) -> {
-                    if(!hasFocus){
-                        checkIfButtonShouldBeActive();
-                    }
-                });
+        answer1EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfButtonShouldBeActive();
+            }
+        });
+
+        answer2EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfButtonShouldBeActive();
+            }
+        });
+        answer3EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfButtonShouldBeActive();
+            }
+        });
+        answer4EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkIfButtonShouldBeActive();
+            }
+        });
         correctAnswerRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-                    checkIfButtonShouldBeActive();
-                });
+            checkIfButtonShouldBeActive();
+        });
     }
 
     private void updateViews() {
