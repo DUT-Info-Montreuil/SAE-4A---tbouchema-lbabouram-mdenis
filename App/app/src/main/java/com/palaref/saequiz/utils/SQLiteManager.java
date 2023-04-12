@@ -10,7 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.palaref.saequiz.model.QuizAnswer;
+import com.palaref.saequiz.model.QuizGame;
 import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.model.QuizQuestion;
 import com.palaref.saequiz.model.User;
 
 import java.io.ByteArrayOutputStream;
@@ -41,6 +44,23 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String USERS_DESCRIPTION = "description";
     private static final String USERS_PICTURE = "picture";
 
+    private static final String QUIZGAME_TABLE = "quizgames";
+    private static final String QUIZGAME_ID = "id"; // used to find questions and answers
+    private static final String QUIZGAME_QUIZINFO_ID = "quizinfo_id";
+
+    private static final String QUESTION_TABLE = "questions";
+    private static final String QUESTION_ID = "id";
+    private static final String QUESTION_QUIZGAME_ID = "quizgame_id";
+    private static final String QUESTION_TEXT = "text";
+    private static final String QUESTION_NUMBER = "number";
+
+    private static final String ANSWER_TABLE = "answers";
+    private static final String ANSWER_ID = "id";
+    private static final String ANSWER_QUESTION_ID = "question_id";
+    private static final String ANSWER_TEXT = "text";
+    private static final String ANSWER_IS_CORRECT = "is_correct";
+    private static final String ANSWER_NUMBER = "number";
+
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -61,7 +81,6 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append(USERS_PICTURE).append(" BLOB);");
         db.execSQL(sql.toString());
 
-
         sql = new StringBuilder().append("CREATE TABLE ").append(QUIZINFO_TABLE).append(" (")
                 .append(ID_FIELD).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(NAME_FIELD).append(" TEXT, ")
@@ -70,6 +89,32 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append(CREATION_DATE_FIELD).append(" TEXT, ")
                 .append("FOREIGN KEY(").append(CREATOR_ID_FIELD).append(") REFERENCES ")
                 .append(USERS_TABLE).append("(").append(CREATOR_ID_FIELD).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(QUIZGAME_TABLE).append(" (")
+                .append(QUIZGAME_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(QUIZGAME_QUIZINFO_ID).append(" INT, ")
+                .append("FOREIGN KEY(").append(QUIZGAME_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(ID_FIELD).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(QUESTION_TABLE).append(" (")
+                .append(QUESTION_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(QUESTION_QUIZGAME_ID).append(" INT, ")
+                .append(QUESTION_TEXT).append(" TEXT, ")
+                .append(QUESTION_NUMBER).append(" INT, ")
+                .append("FOREIGN KEY(").append(QUESTION_QUIZGAME_ID).append(") REFERENCES ")
+                .append(QUIZGAME_TABLE).append("(").append(QUIZGAME_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(ANSWER_TABLE).append(" (")
+                .append(ANSWER_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(ANSWER_QUESTION_ID).append(" INT, ")
+                .append(ANSWER_TEXT).append(" TEXT, ")
+                .append(ANSWER_IS_CORRECT).append(" INT, ")
+                .append(ANSWER_NUMBER).append(" INT, ")
+                .append("FOREIGN KEY(").append(ANSWER_QUESTION_ID).append(") REFERENCES ")
+                .append(QUESTION_TABLE).append("(").append(QUESTION_ID).append("));");
         db.execSQL(sql.toString());
     }
 
@@ -150,7 +195,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(CREATOR_ID_FIELD, quiz.getCreatorId());
         values.put(CREATION_DATE_FIELD, quiz.getCreationDate().toString());
 
-        db.insert(QUIZINFO_TABLE, null, values);
+        long id = db.insert(QUIZINFO_TABLE, null, values);
+        quiz.setId((int) id);
     }
 
     public ArrayList<QuizInfo> getAllQuizInfos(){
@@ -186,6 +232,24 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         return quiz;
     }
 
+    public QuizInfo getQuizByName(String name){
+        SQLiteDatabase db = getReadableDatabase();
+        QuizInfo quiz = null;
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZINFO_TABLE + " WHERE " + NAME_FIELD + "=?", new String[]{name})){
+            if(result.moveToFirst()){
+                int id = result.getInt(0);
+                String name1 = result.getString(1);
+                String description = result.getString(2);
+                int creatorId = result.getInt(3);
+                Date creationDate = convertStringToDate(result.getString(4));
+                quiz = new QuizInfo(id, name1, description, creatorId, creationDate);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return quiz;
+    }
+
     public void updateQuizInfo(QuizInfo quizInfo){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -197,6 +261,96 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(CREATION_DATE_FIELD, quizInfo.getCreationDate().toString());
 
         db.update(QUIZINFO_TABLE, values, ID_FIELD + " = ?", new String[]{String.valueOf(quizInfo.getId())});
+    }
+
+    public void addQuizGame(QuizGame quizGame){ // this should create a quizGame tuple and it's questions and answers
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(QUIZGAME_QUIZINFO_ID, quizGame.getQuizInfoId());
+
+        long id = db.insert(QUIZGAME_TABLE, null, values);
+        // quizgame has an id of 0 because it's not set yet by the database so we need to get it from the database
+        quizGame.setQuizId((int) id);
+        for(int i = 0; i < quizGame.getQuestions().size(); i++){
+            addQuestion(quizGame.getQuestions().get(i), ((int) id), i);
+        }
+    }
+
+    public void addQuestion(QuizQuestion question, int quizGameId, int questionNumber){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(QUESTION_TEXT, question.getQuestion());
+        values.put(QUESTION_QUIZGAME_ID, quizGameId);
+        values.put(QUESTION_NUMBER, questionNumber);
+
+        long id = db.insert(QUESTION_TABLE, null, values);
+        question.setQuizQuestionId((int) id);
+        for(int i = 0; i < question.getAnswers().size(); i++){
+            addAnswer(question.getAnswers().get(i), question.getQuizQuestionId());
+        }
+    }
+
+    public void addAnswer(QuizAnswer answer, int questionId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(ANSWER_TEXT, answer.getAnswer());
+        values.put(ANSWER_IS_CORRECT, answer.isCorrect());
+        values.put(ANSWER_QUESTION_ID, questionId);
+        values.put(ANSWER_NUMBER, answer.getAnswerNumber());
+
+        long id = db.insert(ANSWER_TABLE, null, values);
+        answer.setQuizAnswerId((int) id);
+    }
+
+    public ArrayList<QuizAnswer> getQuizAnswers(int questionId){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<QuizAnswer> answers = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + ANSWER_TABLE + " WHERE " + ANSWER_QUESTION_ID + " = " + questionId + " ORDER BY " + ANSWER_NUMBER + " ASC", null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    int questionId2 = result.getInt(1);
+                    String answer = result.getString(2);
+                    boolean isCorrect = result.getInt(3) == 1;
+                    int answerNumber = result.getInt(4);
+                    answers.add(new QuizAnswer(id, questionId2, answer, isCorrect, answerNumber));
+                }
+            }
+        }
+        return answers;
+    }
+
+    public ArrayList<QuizQuestion> getQuizQuestions(int quizGameId){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<QuizQuestion> questions = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUESTION_TABLE + " WHERE " + QUESTION_QUIZGAME_ID + " = " + quizGameId + " ORDER BY " + QUESTION_NUMBER + " ASC", null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    int quizGameId2 = result.getInt(1);
+                    String question = result.getString(2);
+                    int questionNumber = result.getInt(3);
+                    questions.add(new QuizQuestion(id, quizGameId2, question, getQuizAnswers(id), questionNumber));
+                }
+            }
+        }
+        return questions;
+    }
+
+    public QuizGame getQuizGameByQuizInfoId(int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        QuizGame quizGame = null;
+        try(Cursor result = db.rawQuery("SELECT * FROM " + QUIZGAME_TABLE + " WHERE " + QUIZGAME_QUIZINFO_ID + " = " + quizInfoId, null)){
+            if(result.moveToFirst()){
+                int id = result.getInt(0);
+                int quizInfoId2 = result.getInt(1);
+                quizGame = new QuizGame(id, quizInfoId2, getQuizQuestions(id));
+            }
+        }
+        return quizGame;
     }
 
     private Bitmap getBitmapFromByteArray(byte[] data) {

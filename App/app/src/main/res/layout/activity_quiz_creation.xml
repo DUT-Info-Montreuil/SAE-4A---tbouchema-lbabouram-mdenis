@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuizCreationActivity">
+
+    <EditText
+        android:id="@+id/title_edittext_quiz_creation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/submit_button_quiz_creation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/descbg_imageview_quiz_creation"
+        android:layout_width="342dp"
+        android:layout_height="208dp"
+        android:alpha="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_edittext_quiz_creation"
+        app:srcCompat="@drawable/overview_description_shape" />
+
+    <EditText
+        android:id="@+id/description_edittext_quiz_creation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="@+id/descbg_imageview_quiz_creation"
+        app:layout_constraintEnd_toEndOf="@+id/descbg_imageview_quiz_creation"
+        app:layout_constraintStart_toStartOf="@+id/descbg_imageview_quiz_creation"
+        app:layout_constraintTop_toTopOf="@+id/descbg_imageview_quiz_creation" />
+
+    <Button
+        android:id="@+id/addquestion_button_quiz_creation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Add question"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descbg_imageview_quiz_creation" />
+
+    <ListView
+        android:id="@+id/questions_listview_quiz_creation"
+        android:layout_width="409dp"
+        android:layout_height="332dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addquestion_button_quiz_creation" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
