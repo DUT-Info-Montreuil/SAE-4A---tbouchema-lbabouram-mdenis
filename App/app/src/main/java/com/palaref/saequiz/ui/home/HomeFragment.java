@@ -1,10 +1,12 @@
 package com.palaref.saequiz.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,8 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.palaref.saequiz.MainActivity;
+import com.palaref.saequiz.QuizCreationActivity;
 import com.palaref.saequiz.databinding.FragmentHomeBinding;
 import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.ui.profile.LoginActivity;
 import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.Objects;
@@ -28,6 +33,19 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Button addQuizButton = binding.addquizButtonHome;
+        addQuizButton.setOnClickListener(v -> {
+            Intent intent;
+            if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) == -1){
+                intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+            else {
+                intent = new Intent(getContext(), QuizCreationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         setupAdapter();
 

@@ -79,4 +79,8 @@ public class QuizInfo { // this class is the same as what we have in the databas
                 ", tags=" + Arrays.toString(tags) +
                 '}';
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

@@ -25,7 +25,7 @@ public class QuizOverviewActivity extends AppCompatActivity {
     private Button playButton;
     private int quizId;
 
-    private ActivityResultLauncher<Intent> quizLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> quizLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
@@ -33,7 +33,7 @@ public class QuizOverviewActivity extends AppCompatActivity {
                     int score = result.getData().getIntExtra("score", -1);
                     if (score != -1) {
                         // Load user data and update UI
-                        Toast.makeText(this, "Your score was: " + score, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Your score was : " + score, Toast.LENGTH_SHORT).show();
                     } else {
                         // Display error message or retry login
                         Toast.makeText(this, "There was an error getting your score", Toast.LENGTH_SHORT).show();
