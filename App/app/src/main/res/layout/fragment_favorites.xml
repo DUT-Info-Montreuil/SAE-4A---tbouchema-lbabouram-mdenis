@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,37 +8,62 @@
     tools:context=".ui.favorites.FavoritesFragment"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/no_favorites_textview_favorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp">
+        android:text="No favorites yet"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/your_favorites_button_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/quizPrimary"
-            android:textSize="20sp"
-            android:text="Your Favorites"/>
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/your_quizzes_button_favorite"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/quizPrimary"
-            android:textSize="20sp"
-            android:text="Your Quizzes"/>
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/your_favorites_button_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/quizPrimary"
+                android:text="Your Favorites"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/your_quizzes_button_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/quizPrimary"
+                android:text="Your Quizzes"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/quizzes_gridview_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:numColumns="2"
+            tools:listitem="@layout/favorite_quizzes_cell" />
 
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/quizzes_gridview_favorite"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"
-        android:gravity="center"
-        tools:listitem="@layout/favorite_quizzes_cell"/>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

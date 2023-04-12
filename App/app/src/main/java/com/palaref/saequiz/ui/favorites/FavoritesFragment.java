@@ -17,6 +17,8 @@ import com.palaref.saequiz.databinding.FragmentFavoritesBinding;
 import com.palaref.saequiz.utils.QuizGridAdapter;
 import com.palaref.saequiz.utils.SQLiteManager;
 
+import java.util.Objects;
+
 public class FavoritesFragment extends Fragment {
 
     private FragmentFavoritesBinding binding;
@@ -51,9 +53,33 @@ public class FavoritesFragment extends Fragment {
 
     private void refreshAdapter() {
         int userId = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
+
+        if(userId == -1){
+            // set everything to invisible and show a message
+            binding.yourFavoritesButtonFavorite.setVisibility(View.INVISIBLE);
+            binding.yourQuizzesButtonFavorite.setVisibility(View.INVISIBLE);
+            binding.quizzesGridviewFavorite.setVisibility(View.INVISIBLE);
+            binding.noFavoritesTextviewFavorite.setVisibility(View.VISIBLE);
+
+            switch (Objects.requireNonNull(favoritesViewModel.getState().getValue())) {
+                case "fav":
+                    binding.noFavoritesTextviewFavorite.setText("You need to be logged in to see your favorites");
+                    break;
+                case "my":
+                    binding.noFavoritesTextviewFavorite.setText("You need to be logged in to see your quizzes");
+                    break;
+            }
+            return;
+        }else {
+            binding.yourFavoritesButtonFavorite.setVisibility(View.VISIBLE);
+            binding.yourQuizzesButtonFavorite.setVisibility(View.VISIBLE);
+            binding.quizzesGridviewFavorite.setVisibility(View.VISIBLE);
+            binding.noFavoritesTextviewFavorite.setVisibility(View.INVISIBLE);
+        }
+
         SQLiteManager sqLiteManager = SQLiteManager.getInstance(this.getContext());
         final GridView gridView = binding.quizzesGridviewFavorite;
-        switch (favoritesViewModel.getState().getValue()) {
+        switch (Objects.requireNonNull(favoritesViewModel.getState().getValue())) {
             case "fav":
                 gridView.setAdapter(new QuizGridAdapter(getContext(), sqLiteManager.getAllFavoritesOfUser(userId)));
                 binding.yourFavoritesButtonFavorite.setAlpha(1f);
