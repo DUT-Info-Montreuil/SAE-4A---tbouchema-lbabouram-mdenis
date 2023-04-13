@@ -2,11 +2,14 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using QuizAPI.Services;
 using QuizAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace QuizAPI.Controllers
 {
     [Controller]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class QuizController : Controller
     {
         private readonly MongoDBQuizService _mongoDBQuizService;
@@ -18,6 +21,7 @@ namespace QuizAPI.Controllers
             _mongoDBAuthService = mongoDBAuthService;
         }
 
+        [Authorize]
         [HttpGet("ping")]
         public String ping()
         {
@@ -55,12 +59,20 @@ namespace QuizAPI.Controllers
             return CreatedAtAction(nameof(GetAll), new { id = quizInfo.Id }, quizInfo); // Information about the created resource
         }
 
-        [HttpPut("name")]
-        public async Task<IActionResult> PutQuizName(string userid, string elementId, string quizName)
-        {
-            if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
-                return Unauthorized();
+        // [HttpPut("name")]
+        // public async Task<IActionResult> PutQuizName(string userid, string elementId, string quizName)
+        // {
+        //     if (!await _mongoDBAuthService.VerifyPrivilegesQuizAsync(userid, elementId))
+        //         return Unauthorized();
 
+        //     await _mongoDBQuizService.UpdateQuizNameAsync(elementId, quizName);
+        //     return NoContent();
+        // }
+
+        [HttpPut("name")]
+        [Authorize(Policy = "ModifyElement")]
+        public async Task<IActionResult> PutQuizName(string elementId, string quizName)
+        {
             await _mongoDBQuizService.UpdateQuizNameAsync(elementId, quizName);
             return NoContent();
         }

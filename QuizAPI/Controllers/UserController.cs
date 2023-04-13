@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using QuizAPI.Services;
 using QuizAPI.Models;
 using ImageMagick;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuizAPI.Controllers
 {
     [Controller]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class UserController : Controller
     {
         private readonly MongoDBUserService _mongoDBUserService;

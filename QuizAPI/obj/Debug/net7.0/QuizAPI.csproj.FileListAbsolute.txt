@@ -112,3 +112,4 @@ C:\Users\zarka\Desktop\QuizSAE\SAE-4A---tbouchema-lbabouram-mdenis\QuizAPI\obj\D
 C:\Users\zarka\Desktop\QuizSAE\SAE-4A---tbouchema-lbabouram-mdenis\QuizAPI\obj\Debug\net7.0\QuizAPI.pdb
 C:\Users\zarka\Desktop\QuizSAE\SAE-4A---tbouchema-lbabouram-mdenis\QuizAPI\obj\Debug\net7.0\QuizAPI.genruntimeconfig.cache
 C:\Users\zarka\Desktop\QuizSAE\SAE-4A---tbouchema-lbabouram-mdenis\QuizAPI\obj\Debug\net7.0\ref\QuizAPI.dll
+C:\Users\zarka\Desktop\QuizSAE\SAE-4A---tbouchema-lbabouram-mdenis\QuizAPI\bin\Debug\net7.0\System.Security.Permissions.dll
