@@ -11,10 +11,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.databinding.FragmentLeaderboardBinding;
+import com.palaref.saequiz.utils.LeaderboardAdapter;
+import com.palaref.saequiz.utils.SQLiteManager;
+
+import java.util.Objects;
 
 public class LeaderboardFragment extends Fragment {
 
@@ -29,9 +34,10 @@ public class LeaderboardFragment extends Fragment {
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textLeaderboard;
-        leaderboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText); // basically binds the textView to the String in the ViewModel so that it is updated when the String is updated
+        SQLiteManager sqLiteManager = SQLiteManager.getInstance(getContext());
 
+        final ListView leaderboardListView = binding.leaderboardListview;
+        leaderboardListView.setAdapter(new LeaderboardAdapter(requireContext(), sqLiteManager.get10MostCompletionUsersOfMonths(SQLiteManager.getNowDate())));
         return root;
     }
 }

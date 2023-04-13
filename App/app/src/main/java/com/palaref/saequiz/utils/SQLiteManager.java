@@ -66,6 +66,19 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String FAVORITES_USER_ID = "user_id";
     private static final String FAVORITES_QUIZINFO_ID = "quizinfo_id";
 
+    private static final String BESTSCORES_TABLE = "bestscores";
+    private static final String BESTSCORES_ID = "id";
+    private static final String BESTSCORES_USER_ID = "user_id";
+    private static final String BESTSCORES_QUIZINFO_ID = "quizinfo_id";
+    private static final String BESTSCORES_SCORE = "score";
+    private static final String BESTSCORES_DATE = "date";
+
+    private static final String COMPLETED_TABLE = "completed";
+    private static final String COMPLETED_ID = "id";
+    private static final String COMPLETED_USER_ID = "user_id";
+    private static final String COMPLETED_QUIZINFO_ID = "quizinfo_id";
+    private static final String COMPLETED_DATE = "date";
+
 
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -130,6 +143,29 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append("FOREIGN KEY(").append(FAVORITES_USER_ID).append(") REFERENCES ")
                 .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
                 .append("FOREIGN KEY(").append(FAVORITES_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(BESTSCORES_TABLE).append(" (")
+                .append(BESTSCORES_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(BESTSCORES_USER_ID).append(" INT, ")
+                .append(BESTSCORES_QUIZINFO_ID).append(" INT, ")
+                .append(BESTSCORES_SCORE).append(" INT, ")
+                .append(BESTSCORES_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(BESTSCORES_USER_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
+                .append("FOREIGN KEY(").append(BESTSCORES_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(COMPLETED_TABLE).append(" (")
+                .append(COMPLETED_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(COMPLETED_USER_ID).append(" INT, ")
+                .append(COMPLETED_QUIZINFO_ID).append(" INT, ")
+                .append(COMPLETED_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(COMPLETED_USER_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
+                .append("FOREIGN KEY(").append(COMPLETED_QUIZINFO_ID).append(") REFERENCES ")
                 .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
     }
@@ -423,6 +459,88 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     public boolean isQuizFavorite(int userId, int quizInfoId){
         SQLiteDatabase db = getReadableDatabase();
         try(Cursor result = db.rawQuery("SELECT * FROM " + FAVORITES_TABLE + " WHERE " + FAVORITES_USER_ID + " = " + userId + " AND " + FAVORITES_QUIZINFO_ID + " = " + quizInfoId, null)){
+            return result.getCount() != 0;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public void addBestScoreForUser(int userId, int quizInfoId, int score){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BESTSCORES_USER_ID, userId);
+        values.put(BESTSCORES_QUIZINFO_ID, quizInfoId);
+        values.put(BESTSCORES_SCORE, score);
+        values.put(BESTSCORES_DATE, getNowDate().toString());
+
+        db.insert(BESTSCORES_TABLE, null, values);
+    }
+
+    public void updateUserBestScore(int userId, int quizInfoId, int score){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BESTSCORES_SCORE, score);
+        values.put(BESTSCORES_DATE, getNowDate().toString());
+
+        db.update(BESTSCORES_TABLE, values, BESTSCORES_USER_ID + " = ? AND " + BESTSCORES_QUIZINFO_ID + " = ?", new String[]{String.valueOf(userId), String.valueOf(quizInfoId)});
+    }
+
+    public int getUserBestScore(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + BESTSCORES_TABLE + " WHERE " + BESTSCORES_USER_ID + " = " + userId + " AND " + BESTSCORES_QUIZINFO_ID + " = " + quizInfoId, null)){
+            if(result.moveToFirst()){
+                return result.getInt(3);
+            }
+        }catch (Exception e){
+            return -1;
+        }
+        return -1;
+    }
+
+    public void addCompletedQuizForUser(int userId, int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COMPLETED_USER_ID, userId);
+        values.put(COMPLETED_QUIZINFO_ID, quizInfoId);
+        values.put(COMPLETED_DATE, getNowDate().toString());
+
+        db.insert(COMPLETED_TABLE, null, values);
+    }
+
+    public ArrayList<User> get10MostCompletionUsersOfMonths(Date date){ // returns the 10 users with the most completed quizzes in a month. Date as string is formatted as yyyy-MM-dd
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<User> users = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_ID + " IN (SELECT " + COMPLETED_USER_ID + " FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_DATE + " LIKE '" + date.toString().substring(0, 7) + "%' GROUP BY " + COMPLETED_USER_ID + " ORDER BY COUNT(" + COMPLETED_USER_ID + ") DESC LIMIT 10)", null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    String username = result.getString(1);
+                    String description = result.getString(2);
+                    Bitmap profilePicture = getBitmapFromByteArray(result.getBlob(3));
+                    users.add(new User(id, username, description, profilePicture));
+                }
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return users;
+    }
+
+    public int getCountOfUserCompleted(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_USER_ID + " = " + userID, null)){
+            return result.getCount();
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public boolean isQuizCompleted(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_USER_ID + " = " + userId + " AND " + COMPLETED_QUIZINFO_ID + " = " + quizInfoId, null)){
             return result.getCount() != 0;
         }catch (Exception e){
             return false;
