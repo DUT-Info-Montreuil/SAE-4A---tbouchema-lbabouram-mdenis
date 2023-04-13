@@ -8,62 +8,60 @@
     >
 
      <ImageView
-         android:id="@+id/image_profile"
-         android:layout_width="93dp"
-         android:layout_height="93dp"
+         android:id="@+id/pp_imageview_profile"
+         android:layout_width="128dp"
+         android:layout_height="128dp"
          android:layout_marginLeft="16dp"
          android:layout_marginTop="32dp"
-         android:src="@drawable/defaultpp1"
          android:background="@drawable/profil_circle_shape"
+         android:maxWidth="128dp"
+         android:maxHeight="128dp"
+         android:src="@drawable/defaultpp1"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toTopOf="parent"
          tools:ignore="MissingConstraints" />
 
 
-
-
      <TextView
-         android:layout_width="84dp"
-         android:layout_height="25dp"
-         android:layout_marginStart="16dp"
-         android:layout_marginTop="32dp"
-         android:layout_marginEnd="16dp"
+         android:id="@+id/username_textview_profile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
          android:background="@drawable/profil_text_shape"
+         android:gravity="center"
+         android:padding="8dp"
          android:text="Name"
          android:textAlignment="center"
          android:textColor="#FFFFFF"
-         android:textSize="16sp"
-         android:gravity="center"
+         android:textSize="20sp"
+         app:layout_constraintBottom_toBottomOf="@+id/pp_imageview_profile"
          app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toEndOf="@+id/image_profile"
-         app:layout_constraintTop_toTopOf="@+id/image_profile"
-         tools:text="Pseudo" />
+         app:layout_constraintStart_toEndOf="@+id/pp_imageview_profile"
+         app:layout_constraintTop_toTopOf="@+id/pp_imageview_profile"
+         tools:text="Username
+" />
 
 
      <TextView
-         android:id="@+id/text_profile"
-         android:layout_width="230dp"
+         android:id="@+id/bio_textview_profile"
+         android:layout_width="match_parent"
          android:layout_height="93dp"
-         android:layout_marginStart="8dp"
+         android:layout_marginLeft="8dp"
          android:layout_marginTop="8dp"
-         android:layout_marginEnd="8dp"
+         android:layout_marginRight="8dp"
          android:background="@drawable/profil_text_shape"
+         android:gravity="center"
          android:textAlignment="center"
          android:textColor="#FFFFFF"
          android:textSize="20sp"
-         app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintHorizontal_bias="0.615"
          app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
-         app:layout_constraintVertical_bias="0.348"
-         tools:text="Bio"
-         android:gravity="center"/>
+         app:layout_constraintTop_toBottomOf="@+id/pp_imageview_profile"
+         tools:text="Bio" />
 
      <Button
          android:id="@+id/logout_button"
-         android:layout_width="103dp"
-         android:layout_height="40dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
          android:backgroundTint="@color/quizSecondary"
          android:elevation="4dp"
          android:text="Log out"
@@ -79,6 +77,29 @@
          android:text="Log in"
          android:textColor="#De7a22"
 
-         tools:layout_editor_absoluteX="85dp"
-         tools:layout_editor_absoluteY="204dp" />
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
+
+     <TextView
+         android:id="@+id/textProfile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="TextView"
+         app:layout_constraintBottom_toTopOf="@+id/login_button_profile_fragment"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent" />
+
+     <Button
+         android:id="@+id/admin_button_profile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="2dp"
+         android:text="Admin mode"
+         android:backgroundTint="@color/teal_200"
+         app:layout_constraintBottom_toTopOf="@+id/bio_textview_profile"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toEndOf="@+id/pp_imageview_profile"
+         app:layout_constraintTop_toBottomOf="@+id/username_textview_profile" />
 </androidx.constraintlayout.widget.ConstraintLayout>

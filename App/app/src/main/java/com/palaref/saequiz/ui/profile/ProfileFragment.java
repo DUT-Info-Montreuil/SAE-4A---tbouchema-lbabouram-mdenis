@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,15 +25,19 @@ import com.palaref.saequiz.databinding.FragmentProfileBinding;
 import com.palaref.saequiz.model.User;
 import com.palaref.saequiz.utils.SQLiteManager;
 
-import java.util.Objects;
-
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private ProfileViewModel profileViewModel;
     private boolean hasPopped = false;
-    private Button loginButton;
-    private Button logoutButton;
+    private Button loginButton, logoutButton, adminButton;
+
+    private TextView usernameTextView, bioTextView;
+
+    private ImageView profileImageView;
+
+    private TextView statusText;
+
 
     private final ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult( // this is a variable even though it looks like a method
             new ActivityResultContracts.StartActivityForResult(),
@@ -58,17 +62,19 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textProfile;
-        profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        setupViews();
 
-        loginButton = binding.loginButtonProfileFragment;
+        setupListeners();
+
+        return root;
+    }
+
+    private void setupListeners() {
         loginButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             loginLauncher.launch(intent);
         });
 
-
-        logoutButton = binding.logoutButton;
         logoutButton.setOnClickListener(v -> {
             MainActivity.sharedPreferences.edit().putInt(MainActivity.USER_ID, -1).apply();
             profileViewModel.setText("Not logged in");
@@ -76,44 +82,93 @@ public class ProfileFragment extends Fragment {
             navController.navigate(R.id.navigation_home);
         });
 
-        return root;
+        adminButton.setOnClickListener(v -> {
+            // start admin activity which isn't implemented yet
+        });
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) != -1)
-            loginButton.setVisibility(View.GONE);
-        if(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1) == -1)
-            logoutButton.setVisibility(View.GONE);
+        if(isLoggedIn()){
+            displayLoggedInViews();
+            loadUserData(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1));
+        }else{
+            displayLoggedOutViews();
+            popLogginActivity();
+        }
+    }
 
-        int id = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
-        if(id == -1 && !hasPopped){
+    private void popLogginActivity() {
+        if(!hasPopped){
             // not logged in
             hasPopped = true;
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             loginLauncher.launch(intent);
-        }else {
-            // logged in
-            loadUserData(id);
         }
+    }
+
+    public void setupViews(){
+        statusText = binding.textProfile;
+        profileViewModel.getText().observe(getViewLifecycleOwner(), statusText::setText);
+        loginButton = binding.loginButtonProfileFragment;
+        logoutButton = binding.logoutButton;
+        adminButton = binding.adminButtonProfile;
+        usernameTextView = binding.usernameTextviewProfile;
+        bioTextView = binding.bioTextviewProfile;
+        profileImageView = binding.ppImageviewProfile;
     }
 
     private void loadUserData(int id){
         Log.d("ProfileFragment", "loadUserData: " + id);
         User user = SQLiteManager.getInstance(getContext()).getUserById(id);
-        if(user != null)
-            profileViewModel.setText("Logged in as " + user.getUsername());
-        else if (id == -1)
-            profileViewModel.setText("Not logged in");
-        else
+
+        if(user == null){
             profileViewModel.setText("User not found");
+            return;
+        }
+
+        usernameTextView.setText(user.getUsername());
+        bioTextView.setText(user.getDescription());
+        profileImageView.setImageBitmap(user.getProfilePicture());
+        statusText.setText("Logged in as " + user.getUsername());
+        if(SQLiteManager.getInstance(getContext()).isAdmin(user.getId()))
+            adminButton.setVisibility(View.VISIBLE);
+        else
+            adminButton.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public boolean isLoggedIn(){ // possibly move this to parent class if time permits
+        int id = MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1);
+        return id != -1 && SQLiteManager.getInstance(this.getContext()).getUserById(id) != null;
+    }
+
+    private void displayLoggedInViews(){
+        loginButton.setVisibility(View.GONE);
+        logoutButton.setVisibility(View.VISIBLE);
+        usernameTextView.setVisibility(View.VISIBLE);
+        bioTextView.setVisibility(View.VISIBLE);
+        profileImageView.setVisibility(View.VISIBLE);
+        statusText.setVisibility(View.VISIBLE);
+    }
+
+    private void displayLoggedOutViews(){
+        loginButton.setVisibility(View.VISIBLE);
+        logoutButton.setVisibility(View.GONE);
+        usernameTextView.setVisibility(View.GONE);
+        bioTextView.setVisibility(View.GONE);
+        profileImageView.setVisibility(View.GONE);
+        adminButton.setVisibility(View.GONE);
+
+        statusText.setVisibility(View.VISIBLE);
+        statusText.setText("Not logged in");
     }
 }

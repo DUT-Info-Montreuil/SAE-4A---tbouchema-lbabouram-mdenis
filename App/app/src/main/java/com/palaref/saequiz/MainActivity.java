@@ -1,5 +1,6 @@
 package com.palaref.saequiz;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
