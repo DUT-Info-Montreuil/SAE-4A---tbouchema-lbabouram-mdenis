@@ -17,6 +17,7 @@ import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.QuizOverviewActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
+import com.palaref.saequiz.model.User;
 
 import java.util.List;
 
@@ -38,7 +39,11 @@ public class QuizGridAdapter extends ArrayAdapter<QuizInfo> {
         mainText.setText(currentQuiz.getName());
 
         TextView creatorName = convertView.findViewById(R.id.creator_textview_favorites_cell);
-        creatorName.setText("By : " + SQLiteManager.getInstance(getContext()).getUserById(currentQuiz.getCreatorId()).getUsername());
+        User user = SQLiteManager.getInstance(getContext()).getUserById(currentQuiz.getCreatorId());
+        if(user == null)
+            creatorName.setText("By : Unknown");
+        else
+            creatorName.setText("By : " + user.getUsername());
 
         return convertView;
     }

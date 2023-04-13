@@ -47,7 +47,15 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
 
         setupTheme();
 
+        checkIfUserExists();
+
         //this.deleteDatabase("quizDB");
+    }
+
+    private void checkIfUserExists(){ // makes sure that the user id in shared preferences is valid
+        SQLiteManager sqLiteManager = SQLiteManager.getInstance(this);
+        if(sqLiteManager.getUserById(sharedPreferences.getInt(USER_ID, -1)) == null)
+            sharedPreferences.edit().putInt(USER_ID, -1).apply();
     }
 
     @Override
