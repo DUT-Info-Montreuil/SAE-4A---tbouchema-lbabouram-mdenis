@@ -92,9 +92,21 @@ public class ProfileFragment extends Fragment {
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if(isLoggedIn()){
+            displayLoggedInViews();
+            loadUserData(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1));
+        }else{
+            displayLoggedOutViews();
+            popLogginActivity();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-
         if(isLoggedIn()){
             displayLoggedInViews();
             loadUserData(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1));
