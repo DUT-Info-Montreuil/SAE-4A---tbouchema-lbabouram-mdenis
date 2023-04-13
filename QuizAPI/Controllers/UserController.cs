@@ -24,34 +24,31 @@ namespace QuizAPI.Controllers
             _env = env;
         }
 
-        [HttpGet("ping")]
-        public String ping()
-        {
-            return "pong";
-        }
-
         [HttpGet]
         public async Task<List<UserProfile>> GetAllUsers()
         {
             return await _mongoDBUserService.GetAllUsersAsync();
         }
 
-        [HttpGet("byid/{elementid}")]
-        public async Task<UserProfile> GetUserById([FromRoute] string elementid)
+        [HttpGet("byid/{elementId}")]
+        [Authorize]
+        public async Task<UserProfile> GetUserById([FromRoute] string elementId)
         {
-            return await _mongoDBUserService.GetUserByIdAsync(elementid);
+            return await _mongoDBUserService.GetUserByIdAsync(elementId);
         }
 
         [HttpGet("bylogin/{Login}")]
+        [Authorize]
         public async Task<UserProfile> GetUserByPseudo([FromRoute] string Login)
         {
             return await _mongoDBUserService.GetUserByLoginAsync(Login);
         }
 
-        [HttpGet("userProfilePicture/{elementid}")]
-        public async Task<IActionResult> GetUserProfilePicture([FromRoute] string elementid)
+        [HttpGet("userProfilePicture/{elementId}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserProfilePicture([FromRoute] string elementId)
         {
-            var user = await _mongoDBUserService.GetUserByIdAsync(elementid);
+            var user = await _mongoDBUserService.GetUserByIdAsync(elementId);
 
             if (user.ProfilePicture == null)
             {
@@ -61,19 +58,10 @@ namespace QuizAPI.Controllers
             return PhysicalFile(user.ProfilePicture, "image/jpeg");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] UserProfile userProfile)
+        [HttpPut("updateProfilePicture/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserUpdateProfilePicture([FromRoute] string elementId)
         {
-            await _mongoDBUserService.CreateUserAsync(userProfile);
-            return CreatedAtAction(nameof(GetAllUsers), new { id = userProfile.Id }, userProfile); // Information about the created resource
-        }
-
-        [HttpPut("updateProfilePicture")]
-        public async Task<IActionResult> PutUserUpdateProfilePicture(string userid, string elementid)
-        {
-            if (!await _mongoDBAuthService.VerifyPrivilegesPersonnalInfoAsync(userid, elementid))
-                return Unauthorized();
-
             try
             {
                 IFormFile file = Request.Form.Files[0];
@@ -87,7 +75,7 @@ namespace QuizAPI.Controllers
                     return BadRequest("The id of the requesting user was not provided");
                 }
 
-                if (!Request.Form.ContainsKey("elementid"))
+                if (!Request.Form.ContainsKey("elementId"))
                 {
                     return BadRequest("The id of the user to update was not provided");
                 }
@@ -119,7 +107,7 @@ namespace QuizAPI.Controllers
                     System.IO.File.Delete(imagePath);
                 }
 
-                var user = await _mongoDBUserService.GetUserByIdAsync(elementid);
+                var user = await _mongoDBUserService.GetUserByIdAsync(elementId);
 
                 if (user.ProfilePicture != null && System.IO.File.Exists(user.ProfilePicture))
                 {
@@ -128,7 +116,7 @@ namespace QuizAPI.Controllers
 
                 image.Write(imagePath);
 
-                await _mongoDBUserService.UpdateUserProfilePictureAsync(elementid, imagePath);
+                await _mongoDBUserService.UpdateUserProfilePictureAsync(elementId, imagePath);
             }
             catch (Exception ex)
             {
@@ -137,113 +125,83 @@ namespace QuizAPI.Controllers
             return Ok("Image uploaded successfully");
         }
 
-        [HttpPut("score/")]
-        public async Task<IActionResult> PutUserScore(string userid, string elementid, int score)
+        [HttpPut("score/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOrAdmin")]
+        public async Task<IActionResult> PutUserScore([FromRoute] string elementId, int score)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateUserScoreAsync(elementid, score);
+            await _mongoDBUserService.UpdateUserScoreAsync(elementId, score);
             return NoContent();
         }
 
-        [HttpPut("addScore/")]
-        public async Task<IActionResult> PutUserAddScore(string userid, string elementid, int score)
+        [HttpPut("addScore/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOrAdmin")]
+        public async Task<IActionResult> PutUserAddScore([FromRoute] string elementId, int score)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateAddUserScoreAsync(elementid, score);
+            await _mongoDBUserService.UpdateAddUserScoreAsync(elementId, score);
             return NoContent();
         }
 
-        [HttpPut("subtractScore/")]
-        public async Task<IActionResult> PutUserSubtractScore(string userid, string elementid, int score)
+        [HttpPut("subtractScore/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOrAdmin")]
+        public async Task<IActionResult> PutUserSubtractScore([FromRoute] string elementId, int score)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateSubtractUserScoreAsync(elementid, score);
+            await _mongoDBUserService.UpdateSubtractUserScoreAsync(elementId, score);
             return NoContent();
         }
 
-        [HttpPut("addFavQuiz/")]
-        public async Task<IActionResult> PutUserFavQuiz(string userid, string elementid, string favQuiz)
+        [HttpPut("addFavQuiz/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserFavQuiz([FromRoute] string elementId, string favQuiz)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateAddUserFavQuizAsync(elementid, favQuiz);
+            await _mongoDBUserService.UpdateAddUserFavQuizAsync(elementId, favQuiz);
             return NoContent();
         }
 
-        [HttpPut("removeFavQuiz/")]
-        public async Task<IActionResult> PutUserRemoveFavQuiz(string userid, string elementid, string favQuiz)
+        [HttpPut("removeFavQuiz/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserRemoveFavQuiz([FromRoute] string elementId, string favQuiz)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateRemoveUserFavQuizAsync(elementid, favQuiz);
+            await _mongoDBUserService.UpdateRemoveUserFavQuizAsync(elementId, favQuiz);
             return NoContent();
         }
 
-        [HttpPut("addCreatedQuiz/")]
-        public async Task<IActionResult> PutUserCreatedQuiz(string userid, string elementid, string createdQuiz)
+        [HttpPut("addCreatedQuiz/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserCreatedQuiz([FromRoute] string elementId, string createdQuiz)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateUserCreatedQuizzesAsync(elementid, createdQuiz);
+            await _mongoDBUserService.UpdateUserCreatedQuizzesAsync(elementId, createdQuiz);
             return NoContent();
         }
 
         [HttpPut("addPlayedQuiz/")]
-        public async Task<IActionResult> PutUserPlayedQuiz(string userid, string elementid, string playedQuiz)
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserPlayedQuiz([FromRoute] string elementId, string playedQuiz)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-                
-            await _mongoDBUserService.UpdateUserPlayedQuizzesAsync(elementid, playedQuiz);
+            await _mongoDBUserService.UpdateUserPlayedQuizzesAsync(elementId, playedQuiz);
             return NoContent();
         }
 
-        [HttpPut("updateUsername/")]
-        public async Task<IActionResult> PutUserUpdatePseudo(string userid, string elementid, string username)
+        [HttpPut("updateUsername/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserUpdatePseudo([FromRoute] string elementId, string username)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesPersonnalInfoAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateUserPseudoAsync(elementid, username);
+            await _mongoDBUserService.UpdateUserPseudoAsync(elementId, username);
             return NoContent();
         }
 
-        [HttpPut("updateEmail/")]
-        public async Task<IActionResult> PutUserUpdateEmail(string userid, string elementid, string email)
+        [HttpPut("updateEmail/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOnly")]
+        public async Task<IActionResult> PutUserUpdateEmail([FromRoute] string elementId, string email)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesPersonnalInfoAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateUserEmailAsync(elementid, email);
+            await _mongoDBUserService.UpdateUserEmailAsync(elementId, email);
             return NoContent();
         }
 
-        [HttpPut("updatePassword/")]
-        public async Task<IActionResult> PutUserUpdatePassword(string userid, string elementid, string password)
+        [HttpDelete("delete/{elementId}")]
+        [Authorize(Policy = "RequireOwnershipOrAdmin")]
+        public async Task<IActionResult> DeleteUser([FromRoute] string elementId)
         {
-            if (!await _mongoDBAuthService.VerifyPrivilegesPersonnalInfoAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.UpdateUserPasswordAsync(elementid, password);
-            return NoContent();
-        }
-
-        [HttpDelete("")]
-        public async Task<IActionResult> DeleteUser(string userid, string elementid)
-        {
-            if (!await _mongoDBAuthService.VerifyPrivilegesUserAsync(userid, elementid))
-                return Unauthorized();
-
-            await _mongoDBUserService.DeleteUserAsync(elementid);
+            await _mongoDBUserService.DeleteUserAsync(elementId);
             return NoContent();
         }
     }

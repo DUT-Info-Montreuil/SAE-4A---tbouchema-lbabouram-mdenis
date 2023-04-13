@@ -3,7 +3,6 @@ using QuizAPI.Models;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
-using BCrypt.Net;
 
 namespace QuizAPI.Services
 {
@@ -16,15 +15,6 @@ namespace QuizAPI.Services
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURL);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             _userCollection = database.GetCollection<UserProfile>(mongoDBSettings.Value.UserCollectionName);
-        }
-
-        public async Task CreateUserAsync(UserProfile user)
-        {
-            string salt = BCrypt.Net.BCrypt.GenerateSalt();
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
-
-            await _userCollection.InsertOneAsync(user);
-            return;
         }
 
         public async Task UpdateUserScoreAsync(string id, int score)
@@ -52,14 +42,6 @@ namespace QuizAPI.Services
 
         public async Task UpdateUserPseudoAsync(string id, string pseudo)
             => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Pseudo", pseudo));
-
-        public async Task UpdateUserPasswordAsync(string id, string password)
-        {
-            string salt = BCrypt.Net.BCrypt.GenerateSalt();
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-            await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Password", hashedPassword));
-            return;
-        }
 
         public async Task UpdateUserEmailAsync(string id, string email)
             => await _userCollection.UpdateOneAsync(user => user.Id == id, Builders<UserProfile>.Update.Set("Email", email));

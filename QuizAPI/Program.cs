@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using QuizAPI.Models;
 using QuizAPI.Services;
-using static QuizAPI.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,11 +30,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization(options =>
  {
-    options.AddPolicy("RequireOwnership", policy =>
-    policy.Requirements.Add(new ResourceOwnershipRequirement()));
-
-    options.AddPolicy("ModifyElement", policy => {
-        policy.RequireAssertion(context =>
+    options.AddPolicy("RequireOwnershipOrAdmin", policy => {
+        policy.RequireAssertion(async context =>
         {
             if (context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
             {
@@ -44,8 +40,36 @@ builder.Services.AddAuthorization(options =>
 
             if (context.User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
             {
+                var httpcontext = context.Resource as Microsoft.AspNetCore.Http.HttpContext;
+                string elementId = httpcontext!.Request.RouteValues["elementId"]!.ToString()!;
                 string userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
-                if (userId == context.Resource!.ToString()) //TODO: find a way to get the element id
+                
+                var mongoDBQuizService = httpcontext.RequestServices.GetService<MongoDBQuizService>();
+                var quizInfo = await mongoDBQuizService!.GetQuizInfoAsync(elementId);
+
+                if (quizInfo != null && quizInfo.QuizCreatorId == userId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    });
+
+    options.AddPolicy("RequireOwnershipOnly", policy => {
+        policy.RequireAssertion(async context =>
+        {
+            if (context.User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            {
+                var httpcontext = context.Resource as Microsoft.AspNetCore.Http.HttpContext;
+                string elementId = httpcontext!.Request.RouteValues["elementId"]!.ToString()!;
+                string userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+                
+                var mongoDBQuizService = httpcontext.RequestServices.GetService<MongoDBQuizService>();
+                var quizInfo = await mongoDBQuizService!.GetQuizInfoAsync(elementId);
+
+                if (quizInfo != null && quizInfo.QuizCreatorId == userId)
                 {
                     return true;
                 }
