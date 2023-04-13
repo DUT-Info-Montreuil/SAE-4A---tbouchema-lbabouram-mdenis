@@ -10,7 +10,7 @@ public class AdminHomeViewModel extends ViewModel {
 
     public AdminHomeViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is the admin home fragment");
     }
 
     public LiveData<String> getText() {

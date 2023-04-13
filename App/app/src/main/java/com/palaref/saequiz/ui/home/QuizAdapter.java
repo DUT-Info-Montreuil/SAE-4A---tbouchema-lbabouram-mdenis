@@ -2,7 +2,6 @@ package com.palaref.saequiz.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.QuizOverviewActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.model.QuizInfo;
-import com.palaref.saequiz.model.User;
 import com.palaref.saequiz.utils.SQLiteManager;
 
 import java.util.ArrayList;
@@ -135,7 +133,7 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Button mainButton;
         MonthlyQuizViewHolder(View itemView) {
             super(itemView);
-            mainButton = itemView.findViewById(R.id.monthly_quiz_button);
+            mainButton = itemView.findViewById(R.id.change_monthly_quiz_button_admin);
         }
     }
 }

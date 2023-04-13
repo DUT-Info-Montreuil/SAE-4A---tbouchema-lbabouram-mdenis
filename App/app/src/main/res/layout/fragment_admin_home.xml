@@ -8,15 +8,61 @@
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/home_textview_admin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
         android:text="Change quiz of the month"
-        android:textStyle="bold"
-        android:textSize="26sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:paddingTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_textview_admin">
+
+        <ImageView
+            android:id="@+id/monthly_quiz_bar_admin"
+            android:layout_width="350dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="-40dp"
+            android:contentDescription="Change quiz of the month"
+            android:src="@drawable/home_quiz_bar_shape"
+            app:layout_constraintBottom_toBottomOf="@+id/change_monthly_quiz_button_admin"
+            app:layout_constraintEnd_toEndOf="@+id/change_monthly_quiz_button_admin"
+            app:layout_constraintStart_toStartOf="@+id/change_monthly_quiz_button_admin" />
+
+        <Button
+            android:id="@+id/change_monthly_quiz_button_admin"
+            android:layout_width="350dp"
+            android:layout_height="150dp"
+            android:background="@drawable/home_monthlyquiz_shape"
+            android:text="Change quiz of the month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/monthly_quiz_date_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Last updated : yyyy-mm-dd"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/monthly_quiz_bar_admin"
+            app:layout_constraintEnd_toEndOf="@+id/monthly_quiz_bar_admin"
+            app:layout_constraintStart_toStartOf="@+id/monthly_quiz_bar_admin" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

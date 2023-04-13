@@ -24,8 +24,11 @@ public class AdminHomeFragment extends Fragment {
         binding = FragmentAdminHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        adminHomeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        binding.changeMonthlyQuizButtonAdmin.setOnClickListener(v -> {
+            // start activty that lists all quizzes and return the selected quiz
+            // then update the monthly quiz
+        });
+
         return root;
     }
 
