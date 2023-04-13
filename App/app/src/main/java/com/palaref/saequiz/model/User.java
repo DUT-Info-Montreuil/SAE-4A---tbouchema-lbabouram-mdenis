@@ -26,9 +26,14 @@ public class User {
     }
 
     public User(String username, Context context){
+        Bitmap[] profilePictures = new Bitmap[4];
+        profilePictures[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp1);
+        profilePictures[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp2);
+        profilePictures[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp3);
+        profilePictures[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp4);
         this.username = username;
         this.description = "This is my incredible description !";
-        this.profilePicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultpp1);
+        this.profilePicture = profilePictures[(int) (Math.random() * 4)];
     }
 
     public int getId() {
