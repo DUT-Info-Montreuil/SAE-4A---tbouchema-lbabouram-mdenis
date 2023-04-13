@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity { // for some reason onCreat
     }
 
     private void setupNav(){
-        BottomNavigationView navView = binding.navView;
+        BottomNavigationView navView = binding.navViewMain;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

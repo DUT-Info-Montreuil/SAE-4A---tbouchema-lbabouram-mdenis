@@ -16,6 +16,13 @@
         android:theme="@style/Theme.SAEQuiz"
         tools:targetApi="31">
         <activity
+            android:name=".ui.admin.admin_home.ChangeMonthlyQuizActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin" />
+        <activity
             android:name=".QuestionCreationActivity"
             android:exported="false" />
         <activity

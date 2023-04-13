@@ -588,6 +588,32 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         db.update(MONTHLYQUIZ_TABLE, values, MONTHLYQUIZ_ID + " = ?", new String[]{String.valueOf(1)});
     }
 
+    public QuizInfo getMonthlyQuiz(){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + MONTHLYQUIZ_TABLE + " WHERE " + MONTHLYQUIZ_ID + " = 1", null)){
+            if(result.moveToFirst()){
+                int quizInfoId = result.getInt(1);
+                return getQuizInfoById(quizInfoId);
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return null;
+    }
+
+    public java.sql.Date getMonthlyQuizDate(){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + MONTHLYQUIZ_TABLE + " WHERE " + MONTHLYQUIZ_ID + " = 1", null)){
+            if(result.moveToFirst()){
+                String date = result.getString(2);
+                return java.sql.Date.valueOf(date);
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return null;
+    }
+
     public boolean isAdmin(int userId){ // checks if the isadmin column is true in the users table
         SQLiteDatabase db = getReadableDatabase();
         try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_ID + " = " + userId + " AND " + USERS_ISADMIN + " = 1", null)){
