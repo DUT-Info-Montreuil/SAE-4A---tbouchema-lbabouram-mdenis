@@ -64,6 +64,24 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof MonthlyQuizViewHolder) {
             // Bind monthly button layout
             MonthlyQuizViewHolder monthlyQuizViewHolder = (MonthlyQuizViewHolder) holder;
+            SQLiteManager sqLiteManager = SQLiteManager.getInstance(inflater.getContext());
+            QuizInfo monthlyQuiz = sqLiteManager.getMonthlyQuiz();
+            if(monthlyQuiz == null){
+                // hide Monthly Quiz button
+                monthlyQuizViewHolder.mainButton.setVisibility(View.GONE);
+                monthlyQuizViewHolder.bar.setVisibility(View.GONE);
+            }
+            else {
+                monthlyQuizViewHolder.mainButton.setVisibility(View.VISIBLE);
+                monthlyQuizViewHolder.bar.setVisibility(View.VISIBLE);
+                monthlyQuizViewHolder.mainButton.setText("Quiz of the month : " + monthlyQuiz.getName());
+                monthlyQuizViewHolder.mainButton.setOnClickListener(v -> {
+                    // start QuizOverviewActivity
+                    Intent intent = new Intent(inflater.getContext(), QuizOverviewActivity.class);
+                    intent.putExtra("quizId", monthlyQuiz.getId());
+                    inflater.getContext().startActivity(intent);
+                });
+            }
         } else {
             QuizInfo quizInfo = quizInfoList.get(position);
             QuizViewHolder quizViewHolder = (QuizViewHolder) holder;
@@ -131,9 +149,11 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
     private static class MonthlyQuizViewHolder extends RecyclerView.ViewHolder {
         Button mainButton;
+        ImageView bar;
         MonthlyQuizViewHolder(View itemView) {
             super(itemView);
-            mainButton = itemView.findViewById(R.id.change_monthly_quiz_button_admin);
+            mainButton = itemView.findViewById(R.id.monthly_quiz_button_home);
+            bar = itemView.findViewById(R.id.monthly_quiz_bar_home);
         }
     }
 }

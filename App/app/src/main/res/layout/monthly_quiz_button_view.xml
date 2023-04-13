@@ -16,18 +16,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/monthly_quiz_illustration"
+            android:id="@+id/monthly_quiz_bar_home"
             android:layout_width="350dp"
             android:layout_height="140dp"
             android:layout_marginBottom="-40dp"
             android:contentDescription="@string/monthly_quiz_illustration"
             android:src="@drawable/home_quiz_bar_shape"
-            app:layout_constraintBottom_toBottomOf="@+id/change_monthly_quiz_button_admin"
-            app:layout_constraintEnd_toEndOf="@+id/change_monthly_quiz_button_admin"
-            app:layout_constraintStart_toStartOf="@+id/change_monthly_quiz_button_admin" />
+            app:layout_constraintBottom_toBottomOf="@+id/monthly_quiz_button_home"
+            app:layout_constraintEnd_toEndOf="@+id/monthly_quiz_button_home"
+            app:layout_constraintStart_toStartOf="@+id/monthly_quiz_button_home" />
 
         <Button
-            android:id="@+id/change_monthly_quiz_button_admin"
+            android:id="@+id/monthly_quiz_button_home"
             android:layout_width="350dp"
             android:layout_height="150dp"
             android:background="@drawable/home_monthlyquiz_shape"
