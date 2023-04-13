@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            passwordEditText.setText("");
         }
     }
 

@@ -43,6 +43,7 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String USERS_USERNAME = "username";
     private static final String USERS_DESCRIPTION = "description";
     private static final String USERS_PICTURE = "picture";
+    private static final String USERS_ISADMIN = "isadmin"; // This is only temporary because it makes no sense to store this in the local database
 
     private static final String QUIZGAME_TABLE = "quizgames";
     private static final String QUIZGAME_ID = "id"; // used to find questions and answers
@@ -79,6 +80,11 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String COMPLETED_QUIZINFO_ID = "quizinfo_id";
     private static final String COMPLETED_DATE = "date";
 
+    private static final String MONTHLYQUIZ_TABLE = "monthlyquiz";
+    private static final String MONTHLYQUIZ_ID = "id";
+    private static final String MONTHLYQUIZ_QUIZINFO_ID = "quizinfo_id";
+    private static final String MONTHLYQUIZ_DATE = "date";
+
 
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -97,7 +103,8 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append(USERS_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(USERS_USERNAME).append(" TEXT, ")
                 .append(USERS_DESCRIPTION).append(" TEXT, ")
-                .append(USERS_PICTURE).append(" BLOB);");
+                .append(USERS_PICTURE).append(" BLOB, ")
+                .append(USERS_ISADMIN).append(" INT);");
         db.execSQL(sql.toString());
 
         sql = new StringBuilder().append("CREATE TABLE ").append(QUIZINFO_TABLE).append(" (")
@@ -168,6 +175,14 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append("FOREIGN KEY(").append(COMPLETED_QUIZINFO_ID).append(") REFERENCES ")
                 .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(MONTHLYQUIZ_TABLE).append(" (")
+                .append(MONTHLYQUIZ_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(MONTHLYQUIZ_QUIZINFO_ID).append(" INT, ")
+                .append(MONTHLYQUIZ_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(MONTHLYQUIZ_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
+        db.execSQL(sql.toString());
     }
 
     @Override
@@ -186,6 +201,12 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
         values.put(USERS_USERNAME, user.getUsername());
         values.put(USERS_DESCRIPTION, user.getDescription());
         values.put(USERS_PICTURE, getByteArrayFromBitmap(user.getProfilePicture()));
+        if(user.getUsername().equals("Tarook")){
+            values.put(USERS_ISADMIN, 1);
+        }
+        else {
+            values.put(USERS_ISADMIN, 0);
+        }
 
         db.insert(USERS_TABLE, null, values);
     }
@@ -541,6 +562,35 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     public boolean isQuizCompleted(int userId, int quizInfoId){
         SQLiteDatabase db = getReadableDatabase();
         try(Cursor result = db.rawQuery("SELECT * FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_USER_ID + " = " + userId + " AND " + COMPLETED_QUIZINFO_ID + " = " + quizInfoId, null)){
+            return result.getCount() != 0;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public void addMonthlyQuiz(int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(MONTHLYQUIZ_QUIZINFO_ID, quizInfoId);
+        values.put(MONTHLYQUIZ_DATE, getNowDate().toString());
+
+        db.insert(MONTHLYQUIZ_TABLE, null, values);
+    }
+
+    public void updateMonthlyQuiz(int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(MONTHLYQUIZ_QUIZINFO_ID, quizInfoId);
+        values.put(MONTHLYQUIZ_DATE, getNowDate().toString());
+
+        db.update(MONTHLYQUIZ_TABLE, values, MONTHLYQUIZ_ID + " = ?", new String[]{String.valueOf(1)});
+    }
+
+    public boolean isAdmin(int userId){ // checks if the isadmin column is true in the users table
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_ID + " = " + userId + " AND " + USERS_ISADMIN + " = 1", null)){
             return result.getCount() != 0;
         }catch (Exception e){
             return false;
