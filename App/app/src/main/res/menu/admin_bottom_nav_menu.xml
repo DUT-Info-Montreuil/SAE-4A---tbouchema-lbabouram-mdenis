@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/navigation_admin_quiz_report"
+        android:icon="@drawable/flag"
+        android:title="@string/quiz_reports" />
+    <item
+        android:id="@+id/navigation_admin_user_report"
+        android:icon="@drawable/flag"
+        android:title="@string/user_reports" />
+    <item
         android:id="@+id/navigation_admin_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
@@ -8,13 +16,5 @@
         android:id="@+id/navigation_admin_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/admin_dashboard" />
-    <item
-        android:id="@+id/navigation_admin_user_report"
-        android:icon="@drawable/user"
-        android:title="@string/user_reports" />
-    <item
-        android:id="@+id/navigation_admin_quiz_report"
-        android:icon="@drawable/hollowmagnifyingglass"
-        android:title="@string/quiz_reports" />
 
 </menu>
