@@ -10,7 +10,7 @@ public class AdminDashboardViewModel extends ViewModel {
 
     public AdminDashboardViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("You are in admin mode.");
     }
 
     public LiveData<String> getText() {

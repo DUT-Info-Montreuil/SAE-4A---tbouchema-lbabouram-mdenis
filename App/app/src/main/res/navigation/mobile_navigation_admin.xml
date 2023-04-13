@@ -8,25 +8,25 @@
     <fragment
         android:id="@+id/navigation_admin_home"
         android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
-        android:label="@string/title_home"
+        android:label="Admin Home"
         tools:layout="@layout/fragment_admin_home" />
 
     <fragment
         android:id="@+id/navigation_admin_dashboard"
         android:name="com.palaref.saequiz.ui.admin.admin_dashboard.AdminDashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="Admin Dashboard"
         tools:layout="@layout/fragment_admin_dashboard" />
 
     <fragment
         android:id="@+id/navigation_admin_user_report"
         android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
-        android:label="@string/title_notifications"
+        android:label="User Reports"
         tools:layout="@layout/fragment_user_report" />
 
     <fragment
         android:id="@+id/navigation_admin_quiz_report"
         android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
-        android:label="@string/title_notifications"
+        android:label="Quiz Reports"
         tools:layout="@layout/fragment_quiz_report" />
 
 </navigation>
