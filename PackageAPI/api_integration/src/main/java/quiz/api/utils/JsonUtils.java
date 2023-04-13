@@ -17,7 +17,6 @@ public class JsonUtils {
     /**
      * Parse a json string to a UserAPI ArrayList
      * @param jsonString
-     * @param userRequests
      * @return ArrayList<UserAPI>
      * @throws FileNotFoundException
      */
