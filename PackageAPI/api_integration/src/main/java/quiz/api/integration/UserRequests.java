@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import quiz.api.connection.ApiClient;
-import quiz.api.dto.UserAPI;
+import quiz.api.dto.*;
 import quiz.api.utils.JsonUtils;
 
 import java.io.File;

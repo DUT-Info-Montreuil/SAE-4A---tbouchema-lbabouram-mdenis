@@ -21,7 +21,7 @@ public class JsonUtils {
      * @return ArrayList<UserAPI>
      * @throws FileNotFoundException
      */
-    public static ArrayList<UserAPI> parseJsonToUserList(String jsonString, UserRequests userRequests) throws FileNotFoundException {
+    public static ArrayList<UserAPI> parseJsonToUserList(String jsonString) throws FileNotFoundException {
         ArrayList<UserAPI> userAPIS = new ArrayList<>();
 
         JsonReader reader = Json.createReader(new FileInputStream(jsonString));
@@ -53,8 +53,8 @@ public class JsonUtils {
                 quizzesPlayed.add(quizzesPlayedArray.getString(j));
             }
 
-            File profilePicture = userRequests.GetUserProfilePicture(jsonObject.getString("id"));
-            UserAPI userAPI = new UserAPI(id, pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
+            File profilePicture = UserRequests.GetUserProfilePicture(jsonObject.getString("id"));
+            UserAPI userAPI = new UserAPI(id, pseudo, email, score, favQuizzes, createdQuizzes, quizzesPlayed, profilePicture);
             userAPIS.add(userAPI);
         }
 
@@ -171,7 +171,7 @@ public class JsonUtils {
      * @return UserAPI
      * @throws FileNotFoundException
      */
-    public static UserAPI parseJsonToUserProfile(String json, UserRequests userRequests) throws FileNotFoundException {
+    public static UserAPI parseJsonToUserProfile(String json) throws FileNotFoundException {
         JsonObject jsonObject = Json.createReader(new StringReader(json)).readObject();
         String id = jsonObject.getString("id");
         String pseudo = jsonObject.getString("pseudo");
@@ -196,8 +196,8 @@ public class JsonUtils {
             quizzesPlayed.add(quizzesPlayedArray.getString(j));
         }
 
-        File profilePicture = userRequests.GetUserProfilePicture(jsonObject.getString("id"));
-        return new UserAPI(id, pseudo, email, profilePicture, score, favQuizzes, createdQuizzes, quizzesPlayed);
+        File profilePicture = UserRequests.GetUserProfilePicture(jsonObject.getString("id"));
+        return new UserAPI(id, pseudo, email, score, favQuizzes, createdQuizzes, quizzesPlayed, profilePicture);
     }
 
     /**
