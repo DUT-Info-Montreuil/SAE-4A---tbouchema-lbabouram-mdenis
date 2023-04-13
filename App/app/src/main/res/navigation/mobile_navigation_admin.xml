@@ -6,6 +6,18 @@
     app:startDestination="@+id/navigation_admin_dashboard">
 
     <fragment
+        android:id="@+id/navigation_admin_quiz_report"
+        android:name="com.palaref.saequiz.ui.admin.admin_quiz_report.QuizReportFragment"
+        android:label="Quiz Reports"
+        tools:layout="@layout/fragment_quiz_report" />
+
+    <fragment
+        android:id="@+id/navigation_admin_user_report"
+        android:name="com.palaref.saequiz.ui.admin.admin_user_report.UserReportFragment"
+        android:label="User Reports"
+        tools:layout="@layout/fragment_user_report" />
+
+    <fragment
         android:id="@+id/navigation_admin_home"
         android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
         android:label="Admin Home"
@@ -16,17 +28,5 @@
         android:name="com.palaref.saequiz.ui.admin.admin_dashboard.AdminDashboardFragment"
         android:label="Admin Dashboard"
         tools:layout="@layout/fragment_admin_dashboard" />
-
-    <fragment
-        android:id="@+id/navigation_admin_user_report"
-        android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
-        android:label="User Reports"
-        tools:layout="@layout/fragment_user_report" />
-
-    <fragment
-        android:id="@+id/navigation_admin_quiz_report"
-        android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
-        android:label="Quiz Reports"
-        tools:layout="@layout/fragment_quiz_report" />
 
 </navigation>
