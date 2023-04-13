@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.palaref.saequiz.AdminActivity;
 import com.palaref.saequiz.MainActivity;
 import com.palaref.saequiz.R;
 import com.palaref.saequiz.databinding.FragmentProfileBinding;
@@ -84,6 +85,8 @@ public class ProfileFragment extends Fragment {
 
         adminButton.setOnClickListener(v -> {
             // start admin activity which isn't implemented yet
+            Intent intent = new Intent(getActivity(), AdminActivity.class);
+            startActivity(intent);
         });
     }
 

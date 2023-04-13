@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_admin_dashboard">
+
+    <fragment
+        android:id="@+id/navigation_admin_home"
+        android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_admin_home" />
+
+    <fragment
+        android:id="@+id/navigation_admin_dashboard"
+        android:name="com.palaref.saequiz.ui.admin.admin_dashboard.AdminDashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_admin_user_report"
+        android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_user_report" />
+
+    <fragment
+        android:id="@+id/navigation_admin_quiz_report"
+        android:name="com.palaref.saequiz.ui.admin.admin_home.AdminHomeFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_quiz_report" />
+
+</navigation>

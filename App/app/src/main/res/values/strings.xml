@@ -10,4 +10,9 @@
     <string name="login_password">Password</string>
     <string name="login_please_log_in_to_continue">Please log in to continue</string>
     <string name="login_sign_up">Sign up</string>
+    <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="user_reports">User Reports</string>
+    <string name="quiz_reports">Quiz Reports</string>
 </resources>
