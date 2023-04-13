@@ -148,7 +148,7 @@ public class ProfileFragment extends Fragment {
         usernameTextView.setText(user.getUsername());
         bioTextView.setText(user.getDescription());
         profileImageView.setImageBitmap(user.getProfilePicture());
-        statusText.setText("Logged in as " + user.getUsername());
+        profileViewModel.setText("Logged in as " + user.getUsername());
         if(SQLiteManager.getInstance(getContext()).isAdmin(user.getId()))
             adminButton.setVisibility(View.VISIBLE);
         else

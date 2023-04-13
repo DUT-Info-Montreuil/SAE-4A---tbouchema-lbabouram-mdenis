@@ -10,7 +10,7 @@ public class ProfileViewModel extends ViewModel {
 
     public ProfileViewModel() {
         text = new MutableLiveData<>();
-        text.setValue("No checks yet");
+        text.setValue("");
     }
 
     public LiveData<String> getText() {
