@@ -8,6 +8,7 @@
         android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:background="@drawable/overview_bar_shape"
         android:textSize="20sp"
         android:alpha="0.5"
