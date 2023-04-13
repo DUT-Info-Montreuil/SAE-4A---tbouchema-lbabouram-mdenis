@@ -3,6 +3,7 @@ package quiz.api.integration;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import quiz.api.connection.ApiClient;
@@ -18,24 +19,17 @@ import java.util.ArrayList;
  * The last parameter if there is one is the new value of the element. <br> <br>
  * The Get methods will only need the <b>elementid</b> except <br> <pre>GetAllUsers()</pre> and will return a <b>UserAPI</b> object if the request succeeds otherwise they will return <b>null</b> <br>
  */
-public class UserRequests extends ApiClient {
-    /**
-     * This constructor is used to create a new UserRequests object
-     * @param host The host of the API declared in the ApiClient<br>
-     * Example: http://localhost:8080/
-     */
-    public UserRequests(String host) {
-        super(host);
-    }
+public class UserRequests {
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String ping() {
+    public static ArrayList<UserAPI> GetAllUsers() {
         try {
-            return super.getClient().target(super.getHost() + "api/user/ping")
+            String response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/")
                     .request()
                     .get(String.class);
+            return JsonUtils.parseJsonToUserList(response);
         } catch (Exception e) {
             return null;
         }
@@ -44,12 +38,13 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public ArrayList<UserAPI> GetAllUsers() {
+    public static UserAPI GetUserById(String elementid) {
         try {
-            String response = super.getClient().target(super.getHost() + "api/user/")
+            String url = ApiClient._host + "api/user/byid/" + elementid;
+            String response = ApiClient.getInstance(ApiClient._host).target(url)
                     .request()
                     .get(String.class);
-            return JsonUtils.parseJsonToUserList(response, this);
+            return JsonUtils.parseJsonToUserProfile(response);
         } catch (Exception e) {
             return null;
         }
@@ -58,25 +53,10 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public UserAPI GetUserById(String elementid) {
+    public static String GetUserByLogin(String login) {
+        String url = ApiClient._host + "api/user/bylogin/" + login;
         try {
-            String url = super.getHost() + "api/user/byid/" + elementid;
-            String response = super.getClient().target(url)
-                    .request()
-                    .get(String.class);
-            return JsonUtils.parseJsonToUserProfile(response, this);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Refer to UserRequests class documentation for more information
-     */
-    public String GetUserByLogin(String login) {
-        String url = super.getHost() + "api/user/bylogin/" + login;
-        try {
-            String response = super.getClient().target(url)
+            String response = ApiClient.getInstance(ApiClient._host).target(url)
                     .request()
                     .get(String.class);
             return response;
@@ -88,10 +68,10 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public File GetUserProfilePicture(String elementid) {
-        String url = super.getHost() + "api/user/userprofilepicture/" + elementid;
+    public static File GetUserProfilePicture(String elementId) {
+        String url = ApiClient._host + "api/user/userprofilepicture/" + elementId;
         try {
-            File response = super.getClient().target(url)
+            File response = ApiClient.getInstance(ApiClient._host).target(url)
                     .request()
                     .get(File.class);
             return response;
@@ -103,33 +83,48 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserProfilePicture(String userid, String elementid, File file) {
+    public static void UpdateUserProfilePicture(String elementId, File file) {
         FormDataMultiPart form = new FormDataMultiPart();
-        form.field("userid", userid);
-        form.field("elementid", elementid);
         form.bodyPart(new FileDataBodyPart("file", file, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/userprofilepicture")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.MULTIPART_FORM_DATA_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/userprofilepicture/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, form.getMediaType()), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserScore(String userid, String elementid, int score) {
+    public static void UpdateUserScore(String elementId, int score) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
+        form.param("score", String.valueOf(score));
+
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/score/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+    }
+
+    /**
+     * Refer to UserRequests class documentation for more information
+     */
+    public static void UpdateUserAddScore(String elementId, int score) {
+        Form form = new Form();
+        form.param("score", String.valueOf(score));
+
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/addscore/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
+    }
+
+    /**
+     * Refer to UserRequests class documentation for more information
+     */
+    public static String UpdateUserSubScore(String userid, String elementId, int score) {
+        Form form = new Form();
         form.param("score", String.valueOf(score));
 
         try {
-            String response = super.getClient().target(super.getHost() + "api/user/score")
+            String response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/subscore/" + elementId)
                     .request()
                     .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
             return response;
@@ -141,171 +136,84 @@ public class UserRequests extends ApiClient {
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserAddScore(String userid, String elementid, int score) {
+    public static void UpdateUserAddFavorite(String userid, String elementId, String quizId) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
-        form.param("score", String.valueOf(score));
-
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/addscore")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    /**
-     * Refer to UserRequests class documentation for more information
-     */
-    public String UpdateUserSubScore(String userid, String elementid, int score) {
-        Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
-        form.param("score", String.valueOf(score));
-
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/subscore")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    /**
-     * Refer to UserRequests class documentation for more information
-     */
-    public String UpdateUserAddFavorite(String userid, String elementid, String quizId) {
-        Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("quizid", quizId);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/addfavquiz")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/addfavquiz/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserRemoveFavorite(String userid, String elementid, String quizId) {
+    public static void UpdateUserRemoveFavorite(String elementId, String quizId) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("quizid", quizId);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/removefavquiz")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/removefavquiz/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserAddCreatedQuiz(String userid, String elementid, String quizId) {
+    public static void UpdateUserAddCreatedQuiz(String elementId, String quizId) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("quizid", quizId);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/addcreatedquiz")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/addcreatedquiz/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String  UpdateUserAddPlayedQuiz(String userid, String elementid, String quizId) {
-        Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
+    public static void UpdateUserAddPlayedQuiz(String elementId, String quizId) {
+        Form form = new Form();;
         form.param("quizid", quizId);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/addplayedquiz")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/addplayedquiz/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserPseudo(String userid, String elementid, String username) {
+    public static void UpdateUserPseudo(String elementId, String username) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("username", username);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/updateusername")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/updatepseudo/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserEmail(String userid, String elementid, String email) {
+    public static void UpdateUserEmail(String elementId, String email) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("email", email);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/updateemail")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/updateemail/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 
     /**
      * Refer to UserRequests class documentation for more information
      */
-    public String UpdateUserPassword(String userid, String elementid, String password) {
+    public static void UpdateUserPassword(String elementId, String password) {
         Form form = new Form();
-        form.param("userid", userid);
-        form.param("elementid", elementid);
         form.param("password", password);
 
-        try {
-            String response = super.getClient().target(super.getHost() + "api/user/updatepassword")
-                    .request()
-                    .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-            return response;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        Response response = ApiClient.getInstance(ApiClient._host).target(ApiClient._host + "api/user/updatepassword/" + elementId)
+                .request()
+                .method("PUT", Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
     }
 }

@@ -3,25 +3,23 @@ package quiz.api.connection;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
+import jakarta.ws.rs.core.NewCookie;
+
 public class ApiClient {
     private static ApiClient instance;
-    private JerseyClient client;
-    private final String host;
+    private static JerseyClient client;
+    public static NewCookie cookie;
+    public static String _host;
 
     protected ApiClient(String host) {
         client = JerseyClientBuilder.createClient();
-        this.host = host;
+        _host = host;
     }
 
-    public static ApiClient getInstance(String host) {
-        return instance == null ? instance = new ApiClient(host) : instance;
-    }
-
-    public JerseyClient getClient() {
+    public static JerseyClient getInstance(String host) {
+        if (instance == null) {
+            instance = new ApiClient(host);
+        }
         return client;
-    }
-
-    public String getHost() {
-        return host;
     }
 }

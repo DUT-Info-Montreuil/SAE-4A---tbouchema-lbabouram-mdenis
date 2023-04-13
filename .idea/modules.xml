@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SAE-4A---tbouchema-lbabouram-mdenis.iml" filepath="$PROJECT_DIR$/.idea/SAE-4A---tbouchema-lbabouram-mdenis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PackageAPI/api_integration/api_integration.iml" filepath="$PROJECT_DIR$/PackageAPI/api_integration/api_integration.iml" />
     </modules>
   </component>
 </project>

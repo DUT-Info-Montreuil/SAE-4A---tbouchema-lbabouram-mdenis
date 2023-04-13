@@ -23,6 +23,17 @@ public class UserAPI {
         _QuizzesPlayed = quizzesPlayed;
     }
 
+    public UserAPI(String id, String pseudo, String email, int score, ArrayList<String> favQuizzes, ArrayList<String> createdQuizzes, ArrayList<String> quizzesPlayed, File profilePicture) {
+        _id = id;
+        _pseudo = pseudo;
+        _email = email;
+        _score = score;
+        _FavQuizzes = favQuizzes;
+        _CreatedQuizzes = createdQuizzes;
+        _QuizzesPlayed = quizzesPlayed;
+        _ProfilePicture = profilePicture;
+    }
+
     public String getId() {
         return _id;
     }
