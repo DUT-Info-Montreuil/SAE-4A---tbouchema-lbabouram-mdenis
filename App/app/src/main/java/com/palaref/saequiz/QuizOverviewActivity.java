@@ -31,20 +31,24 @@ public class QuizOverviewActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK) {
                     // Check if login was successful
                     int score = result.getData().getIntExtra("score", -1);
+                    SQLiteManager sqLiteManager = SQLiteManager.getInstance(this);
                     if (score != -1) {
                         // Load user data and update UI
-                        int bestScoreInt = SQLiteManager.getInstance(this).getUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId);
+                        int bestScoreInt = sqLiteManager.getUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId);
                         if(score > bestScoreInt && bestScoreInt != -1){
                             Toast.makeText(this, "New best score updated: " + score + " : " + bestScoreInt, Toast.LENGTH_SHORT).show();
                             bestScore.setText("Best score : " + score);
-                            SQLiteManager.getInstance(this).updateUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
+                            sqLiteManager.updateUserBestScore(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
                         } else if (bestScoreInt != -1){
                             Toast.makeText(this, "Your score was : " + score, Toast.LENGTH_SHORT).show();
                             bestScore.setText("Best score : " + bestScoreInt);
                         }else{
                             Toast.makeText(this, "New score was : " + score, Toast.LENGTH_SHORT).show();
                             bestScore.setText("Best score : " + score);
-                            SQLiteManager.getInstance(this).addBestScoreForUser(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
+                            sqLiteManager.addBestScoreForUser(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId, score);
+                        }
+                        if(!sqLiteManager.isQuizCompleted(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId)){
+                            sqLiteManager.addCompletedQuizForUser(MainActivity.sharedPreferences.getInt(MainActivity.USER_ID, -1), quizId);
                         }
                     } else {
                         // Display error message or retry login

@@ -73,6 +73,12 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
     private static final String BESTSCORES_SCORE = "score";
     private static final String BESTSCORES_DATE = "date";
 
+    private static final String COMPLETED_TABLE = "completed";
+    private static final String COMPLETED_ID = "id";
+    private static final String COMPLETED_USER_ID = "user_id";
+    private static final String COMPLETED_QUIZINFO_ID = "quizinfo_id";
+    private static final String COMPLETED_DATE = "date";
+
 
     private SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -149,6 +155,17 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
                 .append("FOREIGN KEY(").append(BESTSCORES_USER_ID).append(") REFERENCES ")
                 .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
                 .append("FOREIGN KEY(").append(BESTSCORES_QUIZINFO_ID).append(") REFERENCES ")
+                .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder().append("CREATE TABLE ").append(COMPLETED_TABLE).append(" (")
+                .append(COMPLETED_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(COMPLETED_USER_ID).append(" INT, ")
+                .append(COMPLETED_QUIZINFO_ID).append(" INT, ")
+                .append(COMPLETED_DATE).append(" TEXT, ")
+                .append("FOREIGN KEY(").append(COMPLETED_USER_ID).append(") REFERENCES ")
+                .append(USERS_TABLE).append("(").append(USERS_ID).append("), ")
+                .append("FOREIGN KEY(").append(COMPLETED_QUIZINFO_ID).append(") REFERENCES ")
                 .append(QUIZINFO_TABLE).append("(").append(QUIZINFO_ID).append("));");
         db.execSQL(sql.toString());
     }
@@ -480,6 +497,54 @@ public class SQLiteManager extends SQLiteOpenHelper { // currently uses profiles
             return -1;
         }
         return -1;
+    }
+
+    public void addCompletedQuizForUser(int userId, int quizInfoId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COMPLETED_USER_ID, userId);
+        values.put(COMPLETED_QUIZINFO_ID, quizInfoId);
+        values.put(COMPLETED_DATE, getNowDate().toString());
+
+        db.insert(COMPLETED_TABLE, null, values);
+    }
+
+    public ArrayList<User> get10MostCompletionUsersOfMonths(Date date){ // returns the 10 users with the most completed quizzes in a month. Date as string is formatted as yyyy-MM-dd
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<User> users = new ArrayList<>();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + USERS_TABLE + " WHERE " + USERS_ID + " IN (SELECT " + COMPLETED_USER_ID + " FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_DATE + " LIKE '" + date.toString().substring(0, 7) + "%' GROUP BY " + COMPLETED_USER_ID + " ORDER BY COUNT(" + COMPLETED_USER_ID + ") DESC LIMIT 10)", null)){
+            if(result.getCount() != 0){
+                while(result.moveToNext()){
+                    int id = result.getInt(0);
+                    String username = result.getString(1);
+                    String description = result.getString(2);
+                    Bitmap profilePicture = getBitmapFromByteArray(result.getBlob(3));
+                    users.add(new User(id, username, description, profilePicture));
+                }
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return users;
+    }
+
+    public int getCountOfUserCompleted(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_USER_ID + " = " + userID, null)){
+            return result.getCount();
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public boolean isQuizCompleted(int userId, int quizInfoId){
+        SQLiteDatabase db = getReadableDatabase();
+        try(Cursor result = db.rawQuery("SELECT * FROM " + COMPLETED_TABLE + " WHERE " + COMPLETED_USER_ID + " = " + userId + " AND " + COMPLETED_QUIZINFO_ID + " = " + quizInfoId, null)){
+            return result.getCount() != 0;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     private Bitmap getBitmapFromByteArray(byte[] data) {
